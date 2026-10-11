@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hydemod:item/maglev_moon_launcher"
+  }
+}

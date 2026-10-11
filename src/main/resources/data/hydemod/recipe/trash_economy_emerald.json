@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "###",
+    "#G#",
+    "###"
+  ],
+  "key": {
+    "#": "hydemod:trash_cube",
+    "G": "minecraft:gold_nugget"
+  },
+  "result": {
+    "id": "minecraft:emerald",
+    "count": 1
+  }
+}

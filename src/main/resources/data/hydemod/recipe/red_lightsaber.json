@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "hydemod:lightsaber_hilt",
+    "hydemod:red_kyber_crystal"
+  ],
+  "result": {
+    "id": "hydemod:red_lightsaber",
+    "count": 1
+  }
+}

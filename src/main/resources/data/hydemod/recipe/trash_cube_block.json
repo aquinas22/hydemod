@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": "hydemod:trash_cube"
+  },
+  "result": {
+    "id": "hydemod:trash_cube_block",
+    "count": 1
+  }
+}

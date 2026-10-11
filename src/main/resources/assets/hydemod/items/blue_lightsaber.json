@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "hydemod:ignited",
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "hydemod:item/blue_lightsaber_on"
+    },
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "hydemod:item/blue_lightsaber_off"
+    }
+  }
+}

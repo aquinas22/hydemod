@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hydemod:warp_pipe",
+    "minecraft:green_dye"
+  ],
+  "result": {
+    "id": "hydemod:warp_pipe",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": "hydemod:neoplas_ingot"
+  },
+  "result": {
+    "id": "hydemod:neoplas_block",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "OGO",
+    "ORO",
+    "OEO"
+  ],
+  "key": {
+    "O": "minecraft:obsidian",
+    "G": "minecraft:glass_pane",
+    "R": "minecraft:redstone",
+    "E": "minecraft:ender_pearl"
+  },
+  "result": {
+    "id": "hydemod:mind_upload_blackberry",
+    "count": 1
+  }
+}

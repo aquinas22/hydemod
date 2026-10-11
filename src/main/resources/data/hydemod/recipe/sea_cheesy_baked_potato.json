@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:baked_potato",
+    "minecraft:milk_bucket",
+    "minecraft:dried_kelp",
+    "hydemod:sea_cabbage"
+  ],
+  "result": {
+    "id": "hydemod:sea_cheesy_baked_potato",
+    "count": 1
+  }
+}

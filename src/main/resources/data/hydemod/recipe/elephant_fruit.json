@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GOG",
+    "OAO",
+    "GOG"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "O": "hydemod:goober_goo",
+    "A": "minecraft:apple"
+  },
+  "result": {
+    "id": "hydemod:elephant_fruit",
+    "count": 1
+  }
+}

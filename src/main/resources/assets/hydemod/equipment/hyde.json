@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "hydemod:hyde"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "hydemod:hyde"
+      }
+    ]
+  }
+}

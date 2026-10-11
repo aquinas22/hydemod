@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "NNN",
+    "N N",
+    "N N"
+  ],
+  "key": {
+    "N": "hydemod:neoplas_ingot"
+  },
+  "result": {
+    "id": "hydemod:hyde_leggings",
+    "count": 1
+  }
+}

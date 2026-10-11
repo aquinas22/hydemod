@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hydemod:trash_cube_block"
+  ],
+  "result": {
+    "id": "hydemod:trash_cube",
+    "count": 9
+  }
+}

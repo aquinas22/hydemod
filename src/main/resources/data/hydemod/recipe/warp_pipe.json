@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "IEI",
+    "III"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "E": "minecraft:ender_pearl"
+  },
+  "result": {
+    "id": "hydemod:warp_pipe",
+    "count": 2
+  }
+}

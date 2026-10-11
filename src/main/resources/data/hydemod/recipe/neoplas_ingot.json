@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": "hydemod:neoplas_nugget"
+  },
+  "result": {
+    "id": "hydemod:neoplas_ingot",
+    "count": 1
+  }
+}

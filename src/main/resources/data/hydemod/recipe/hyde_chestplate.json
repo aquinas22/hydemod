@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "N N",
+    "NCN",
+    "NNN"
+  ],
+  "key": {
+    "N": "hydemod:neoplas_ingot",
+    "C": "hydemod:paradigm_shift_core"
+  },
+  "result": {
+    "id": "hydemod:hyde_chestplate",
+    "count": 1
+  }
+}

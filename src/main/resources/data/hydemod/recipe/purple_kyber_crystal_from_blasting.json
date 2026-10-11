@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hydemod:end_purple_kyber_ore",
+  "result": {
+    "id": "hydemod:purple_kyber_crystal"
+  },
+  "experience": 1.0,
+  "cookingtime": 100
+}

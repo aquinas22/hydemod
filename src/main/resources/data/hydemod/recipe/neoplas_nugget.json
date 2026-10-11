@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hydemod:neoplas_ingot"
+  ],
+  "result": {
+    "id": "hydemod:neoplas_nugget",
+    "count": 9
+  }
+}

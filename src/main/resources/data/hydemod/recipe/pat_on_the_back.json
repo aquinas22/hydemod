@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " L ",
+    "LGL",
+    " L "
+  ],
+  "key": {
+    "L": "minecraft:leather",
+    "G": "minecraft:golden_apple"
+  },
+  "result": {
+    "id": "hydemod:pat_on_the_back",
+    "count": 1
+  }
+}

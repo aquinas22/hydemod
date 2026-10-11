@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "hydemod:green_kyber_ore",
+    "hydemod:deepslate_blue_kyber_ore",
+    "hydemod:nether_red_kyber_ore",
+    "hydemod:end_purple_kyber_ore",
+    "hydemod:neoplas_block",
+    "hydemod:warp_pipe",
+    "hydemod:charging_station"
+  ]
+}

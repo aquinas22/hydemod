@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " N ",
+    "NCN",
+    " N "
+  ],
+  "key": {
+    "N": "hydemod:neoplas_ingot",
+    "C": "minecraft:clock"
+  },
+  "result": {
+    "id": "hydemod:reset_the_clock",
+    "count": 1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hydemod:block/warp_pipe"
+    }
+  }
+}

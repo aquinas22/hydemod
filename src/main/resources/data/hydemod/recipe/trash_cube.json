@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:rotten_flesh",
+    "minecraft:bone",
+    "minecraft:string",
+    "minecraft:paper"
+  ],
+  "result": {
+    "id": "hydemod:trash_cube",
+    "count": 4
+  }
+}

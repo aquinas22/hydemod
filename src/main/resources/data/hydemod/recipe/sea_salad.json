@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:bowl",
+    "hydemod:sea_beet",
+    "hydemod:sea_yam",
+    "hydemod:sea_cabbage"
+  ],
+  "result": {
+    "id": "hydemod:sea_salad",
+    "count": 1
+  }
+}

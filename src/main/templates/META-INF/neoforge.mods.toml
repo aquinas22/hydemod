@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="Noah"
+description='''
+2070 PARADIGM SHIFT. Sam Hyde boss fight, trash economy, sea floor farming, depth growlers and neoplas.
+Elephant Mario boss fight, Goobers, Warp Pipes, Hyde's Armour.
+Lightsabers that run on Redstone Flux, powered by kyber crystals from all three dimensions.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"

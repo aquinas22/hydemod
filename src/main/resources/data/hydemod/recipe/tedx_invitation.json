@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PNP",
+    "TBT",
+    "PNP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "N": "hydemod:neoplas_nugget",
+    "T": "hydemod:trash_cube",
+    "B": "minecraft:writable_book"
+  },
+  "result": {
+    "id": "hydemod:tedx_invitation",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_table",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:blocks/tall_seagrass"
+    }
+  ],
+  "table": "hydemod:gameplay/sea_yam_from_tall_seagrass"
+}

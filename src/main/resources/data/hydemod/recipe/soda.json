@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hydemod:soda_stream",
+    "minecraft:potion",
+    "minecraft:sugar",
+    "minecraft:sweet_berries"
+  ],
+  "result": {
+    "id": "hydemod:soda",
+    "count": 1
+  }
+}

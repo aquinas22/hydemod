@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hydemod:trash_cube_block",
+  "result": {
+    "id": "hydemod:neoplas_nugget"
+  },
+  "experience": 0.3,
+  "cookingtime": 100
+}
