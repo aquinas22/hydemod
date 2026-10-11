@@ -1,6 +1,87 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/block",
   "textures": {
-    "all": "hydemod:block/end_purple_kyber_ore"
-  }
+    "particle": "minecraft:block/end_stone",
+    "base": "minecraft:block/end_stone",
+    "crystals": "hydemod:block/purple_kyber_crystals"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#base",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#base",
+          "cullface": "up"
+        },
+        "north": {
+          "texture": "#base",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#base",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#base",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#base",
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#crystals",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#crystals",
+          "cullface": "up"
+        },
+        "north": {
+          "texture": "#crystals",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#crystals",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#crystals",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#crystals",
+          "cullface": "east"
+        }
+      },
+      "light_emission": 15
+    }
+  ]
 }

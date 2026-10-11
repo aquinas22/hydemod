@@ -1,7 +1,7 @@
 package com.hydemod.entity;
 
-import com.hydemod.registry.ModEntities;
-import net.minecraft.core.BlockPos;
+import com.hydemod.registry.ModItems;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -9,7 +9,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -33,7 +32,8 @@ import org.jspecify.annotations.Nullable;
  * Abilities:
  *  - Ground Pound: leaps up and slams down, shockwave damages and launches everything nearby.
  *  - Trunk Spray: fires blasts of water from his trunk.
- *  - Goober Call: summons a squad of Goobers (stomp on them!).
+ *  - Goober Barrage: flings handfuls of Goobers (chocolate-covered peanuts) at you.
+ *  - Snack Break: munches a box of Goobers to heal.
  *  - Trunk Charge: dashes at his target.
  * Below half health he gets faster and angrier.
  */
@@ -67,7 +67,7 @@ public class ElephantMario extends HydeBoss {
         goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7));
         goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 16.0F));
         goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        targetSelector.addGoal(1, new HurtByTargetGoal(this, Goober.class));
+        targetSelector.addGoal(1, new HurtByTargetGoal(this));
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
@@ -93,10 +93,11 @@ public class ElephantMario extends HydeBoss {
         }
         boolean enraged = getHealth() < getMaxHealth() * 0.5F;
         abilityCooldown = (enraged ? 50 : 80) + random.nextInt(40);
-        switch (random.nextInt(5)) {
+        switch (random.nextInt(6)) {
             case 0, 1 -> groundPound(level, target);
             case 2 -> trunkSpray(level, target, enraged ? 5 : 3);
-            case 3 -> callGoobers(level);
+            case 3 -> gooberBarrage(level, target, enraged ? 8 : 5);
+            case 4 -> snackBreak(level);
             default -> trunkCharge(target);
         }
     }
@@ -116,7 +117,7 @@ public class ElephantMario extends HydeBoss {
         level.playSound(null, blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.HOSTILE, 2.0F, 0.7F);
         level.sendParticles(ParticleTypes.EXPLOSION, getX(), getY() + 0.3, getZ(), 6, 2.0, 0.2, 2.0, 0.0);
         level.sendParticles(ParticleTypes.CLOUD, getX(), getY() + 0.2, getZ(), 60, 3.0, 0.1, 3.0, 0.1);
-        for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(6.0, 2.0, 6.0), e -> e != this && !(e instanceof Goober))) {
+        for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(6.0, 2.0, 6.0), e -> e != this)) {
             double dist = victim.distanceTo(this);
             float dmg = (float) Math.max(4.0, 16.0 - dist * 2.0);
             victim.hurtServer(level, damageSources().mobAttack(this), dmg);
@@ -140,20 +141,31 @@ public class ElephantMario extends HydeBoss {
         level.playSound(null, blockPosition(), SoundEvents.RAVAGER_ROAR, SoundSource.HOSTILE, 2.0F, 1.8F);
     }
 
-    private void callGoobers(ServerLevel level) {
-        if (level.getEntitiesOfClass(Goober.class, getBoundingBox().inflate(24.0)).size() >= 8) {
+    private void gooberBarrage(ServerLevel level, LivingEntity target, int count) {
+        say("boss.hydemod.elephant_mario.goobers");
+        for (int i = 0; i < count; i++) {
+            ThrownTrashCube candy = new ThrownTrashCube(level, this, new ItemStack(ModItems.GOOBERS.get())).withDamage(4.0F);
+            candy.setPos(getX(), getEyeY() - 0.4, getZ());
+            double dx = target.getX() - getX();
+            double dy = target.getY(0.4) - candy.getY();
+            double dz = target.getZ() - getZ();
+            candy.shoot(dx, dy + Math.sqrt(dx * dx + dz * dz) * 0.15, dz, 1.2F, 12.0F);
+            level.addFreshEntity(candy);
+        }
+        level.playSound(null, blockPosition(), SoundEvents.SNOWBALL_THROW, SoundSource.HOSTILE, 1.5F, 0.8F);
+    }
+
+    private void snackBreak(ServerLevel level) {
+        if (getHealth() > getMaxHealth() * 0.85F) {
             trunkCharge(getTarget());
             return;
         }
-        say("boss.hydemod.elephant_mario.goobers");
-        for (int i = 0; i < 4; i++) {
-            BlockPos pos = blockPosition().offset(random.nextInt(9) - 4, 0, random.nextInt(9) - 4);
-            Goober goober = ModEntities.GOOBER.get().spawn(level, pos, EntitySpawnReason.MOB_SUMMONED);
-            if (goober != null) {
-                goober.setTarget(getTarget());
-                level.sendParticles(ParticleTypes.POOF, goober.getX(), goober.getY() + 0.4, goober.getZ(), 8, 0.2, 0.2, 0.2, 0.02);
-            }
-        }
+        say("boss.hydemod.elephant_mario.snack");
+        heal(30.0F);
+        playSound(SoundEvents.GENERIC_EAT.value(), 2.0F, 0.6F);
+        level.sendParticles(new net.minecraft.core.particles.ItemParticleOption(ParticleTypes.ITEM,
+                net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(new ItemStack(ModItems.GOOBERS.get()))),
+                getX(), getEyeY() - 0.5, getZ(), 25, 0.4, 0.3, 0.4, 0.1);
     }
 
     private void trunkCharge(@Nullable LivingEntity target) {
@@ -174,7 +186,7 @@ public class ElephantMario extends HydeBoss {
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        if (source.getDirectEntity() instanceof Goober || source.getDirectEntity() instanceof TrunkSpray) {
+        if (source.getDirectEntity() instanceof ThrownTrashCube && source.getEntity() == this || source.getDirectEntity() instanceof TrunkSpray) {
             return false;
         }
         boolean hurt = super.hurtServer(level, source, damage);

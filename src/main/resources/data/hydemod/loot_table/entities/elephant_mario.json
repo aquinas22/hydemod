@@ -82,7 +82,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hydemod:goober_goo",
+          "name": "hydemod:goobers",
           "functions": [
             {
               "function": "minecraft:set_count",

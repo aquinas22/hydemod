@@ -2,10 +2,11 @@ package com.hydemod.registry;
 
 import com.hydemod.HydeMod;
 import com.hydemod.block.ChargingStationBlock;
+import com.hydemod.block.KyberOreBlock;
+import com.hydemod.item.KyberColor;
 import com.hydemod.block.WarpPipeBlock;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -17,22 +18,22 @@ public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(HydeMod.MODID);
 
     // Kyber crystal ores: green (overworld stone), blue (deep overworld), red (nether), purple (end).
-    public static final DeferredBlock<DropExperienceBlock> GREEN_KYBER_ORE = BLOCKS.registerBlock("green_kyber_ore",
-            p -> new DropExperienceBlock(UniformInt.of(3, 6), p),
+    public static final DeferredBlock<KyberOreBlock> GREEN_KYBER_ORE = BLOCKS.registerBlock("green_kyber_ore",
+            p -> new KyberOreBlock(UniformInt.of(3, 6), KyberColor.GREEN, p),
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops().strength(3.0F, 3.0F).lightLevel(s -> 5));
-    public static final DeferredBlock<DropExperienceBlock> BLUE_KYBER_ORE = BLOCKS.registerBlock("deepslate_blue_kyber_ore",
-            p -> new DropExperienceBlock(UniformInt.of(4, 8), p),
+                    .requiresCorrectToolForDrops().strength(3.0F, 3.0F).lightLevel(s -> 7));
+    public static final DeferredBlock<KyberOreBlock> BLUE_KYBER_ORE = BLOCKS.registerBlock("deepslate_blue_kyber_ore",
+            p -> new KyberOreBlock(UniformInt.of(4, 8), KyberColor.BLUE, p),
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(SoundType.DEEPSLATE).lightLevel(s -> 5));
-    public static final DeferredBlock<DropExperienceBlock> RED_KYBER_ORE = BLOCKS.registerBlock("nether_red_kyber_ore",
-            p -> new DropExperienceBlock(UniformInt.of(5, 10), p),
+                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(SoundType.DEEPSLATE).lightLevel(s -> 7));
+    public static final DeferredBlock<KyberOreBlock> RED_KYBER_ORE = BLOCKS.registerBlock("nether_red_kyber_ore",
+            p -> new KyberOreBlock(UniformInt.of(5, 10), KyberColor.RED, p),
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.NETHER).instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.NETHER_ORE).lightLevel(s -> 7));
-    public static final DeferredBlock<DropExperienceBlock> PURPLE_KYBER_ORE = BLOCKS.registerBlock("end_purple_kyber_ore",
-            p -> new DropExperienceBlock(UniformInt.of(7, 14), p),
+                    .requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.NETHER_ORE).lightLevel(s -> 9));
+    public static final DeferredBlock<KyberOreBlock> PURPLE_KYBER_ORE = BLOCKS.registerBlock("end_purple_kyber_ore",
+            p -> new KyberOreBlock(UniformInt.of(7, 14), KyberColor.PURPLE, p),
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.SAND).instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops().strength(6.0F, 9.0F).lightLevel(s -> 9));
+                    .requiresCorrectToolForDrops().strength(6.0F, 9.0F).lightLevel(s -> 11));
 
     public static final DeferredBlock<Block> NEOPLAS_BLOCK = BLOCKS.registerSimpleBlock("neoplas_block",
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL));

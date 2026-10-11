@@ -1,0 +1,8 @@
+{
+  "lightsaber.ignite": {"subtitle": "subtitles.hydemod.lightsaber.ignite", "sounds": [{"name": "hydemod:lightsaber/ignite"}]},
+  "lightsaber.retract": {"subtitle": "subtitles.hydemod.lightsaber.retract", "sounds": [{"name": "hydemod:lightsaber/retract"}]},
+  "lightsaber.hum": {"subtitle": "subtitles.hydemod.lightsaber.hum", "sounds": [{"name": "hydemod:lightsaber/hum", "stream": false}]},
+  "lightsaber.swing": {"subtitle": "subtitles.hydemod.lightsaber.swing", "sounds": [
+    {"name": "hydemod:lightsaber/swing1"}, {"name": "hydemod:lightsaber/swing2"}, {"name": "hydemod:lightsaber/swing3"}]},
+  "lightsaber.hit": {"subtitle": "subtitles.hydemod.lightsaber.hit", "sounds": [{"name": "hydemod:lightsaber/hit"}]}
+}

@@ -3,7 +3,8 @@
     "hilt": "hydemod:item/lightsaber_hilt_metal",
     "emitter": "hydemod:item/lightsaber_emitter",
     "blade": "hydemod:item/lightsaber_blade_green",
-    "particle": "hydemod:item/lightsaber_hilt_metal"
+    "particle": "hydemod:item/lightsaber_hilt_metal",
+    "halo": "hydemod:item/lightsaber_halo_green"
   },
   "elements": [
     {

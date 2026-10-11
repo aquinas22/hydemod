@@ -2,7 +2,10 @@ package com.hydemod.item;
 
 import com.hydemod.registry.ModComponents;
 import java.util.function.Consumer;
+import com.hydemod.registry.ModSounds;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -82,9 +85,26 @@ public class LightsaberItem extends Item {
         return stack.getItem() instanceof LightsaberItem && isIgnited(stack) && getEnergy(stack) >= ENERGY_PER_HIT;
     }
 
+    /** Current blade extension 0-4 (0 = no blade, 4 = fully lit). */
+    public static int bladeLength(ItemStack stack) {
+        return stack.getOrDefault(ModComponents.BLADE.get(), 0);
+    }
+
+    private static void setBlade(ItemStack stack, int length) {
+        if (length <= 0) {
+            stack.remove(ModComponents.BLADE.get());
+        } else {
+            stack.set(ModComponents.BLADE.get(), Math.min(4, length));
+        }
+    }
+
+    /** Lights or retracts the blade; the blade then grows/shrinks one step per tick. */
     private static void setIgnited(ItemStack stack, boolean on) {
         if (on) {
             stack.set(ModComponents.IGNITED.get(), net.minecraft.util.Unit.INSTANCE);
+            if (bladeLength(stack) == 0) {
+                setBlade(stack, 1);
+            }
         } else {
             stack.remove(ModComponents.IGNITED.get());
         }
@@ -101,34 +121,49 @@ public class LightsaberItem extends Item {
                 return InteractionResult.FAIL;
             }
             setIgnited(stack, turnOn);
-            level.playSound(null, player.blockPosition(), turnOn ? SoundEvents.BEACON_ACTIVATE : SoundEvents.BEACON_DEACTIVATE,
-                    SoundSource.PLAYERS, 0.8F, turnOn ? 1.9F : 1.6F);
+            level.playSound(null, player.getX(), player.getY() + 1, player.getZ(),
+                    turnOn ? ModSounds.SABER_IGNITE.get() : ModSounds.SABER_RETRACT.get(), SoundSource.PLAYERS, 1.0F, 0.95F + level.getRandom().nextFloat() * 0.1F);
         }
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot) {
-        if (!isIgnited(stack)) {
+        boolean ignited = isIgnited(stack);
+        int blade = bladeLength(stack);
+        // Animate the blade sliding out of / back into the hilt.
+        if (ignited && blade < 4) {
+            setBlade(stack, blade + 1);
+        } else if (!ignited && blade > 0) {
+            setBlade(stack, blade - 1);
+        }
+        if (!ignited) {
             return;
         }
         boolean held = slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND;
         if (!held) {
             setIgnited(stack, false); // blades retract when holstered
+            setBlade(stack, 0);
             return;
         }
         int energy = getEnergy(stack) - ENERGY_PER_TICK;
         if (energy < ENERGY_PER_HIT) {
             setIgnited(stack, false);
-            level.playSound(null, owner.blockPosition(), SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 0.8F, 1.2F);
+            level.playSound(null, owner.blockPosition(), ModSounds.SABER_RETRACT.get(), SoundSource.PLAYERS, 1.0F, 0.7F);
             if (owner instanceof Player player) {
                 player.sendOverlayMessage(Component.translatable("message.hydemod.lightsaber.depleted").withStyle(ChatFormatting.RED));
             }
         }
         setEnergy(stack, energy);
-        if (level.getGameTime() % 40 == 0) {
-            level.playSound(null, owner.blockPosition(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.35F, 2.0F);
+    }
+
+    @Override
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity, InteractionHand hand) {
+        if (isActive(stack) && !entity.level().isClientSide()) {
+            entity.level().playSound(null, entity.getX(), entity.getEyeY(), entity.getZ(), ModSounds.SABER_SWING.get(),
+                    entity.getSoundSource(), 0.9F, 0.9F + entity.getRandom().nextFloat() * 0.25F);
         }
+        return false;
     }
 
     @Override
@@ -136,6 +171,13 @@ public class LightsaberItem extends Item {
         if (isActive(stack)) {
             setEnergy(stack, getEnergy(stack) - ENERGY_PER_HIT);
             target.igniteForSeconds(color == KyberColor.RED || color == KyberColor.PURPLE ? 4 : 2);
+            if (target.level() instanceof ServerLevel level) {
+                level.playSound(null, target.getX(), target.getY(0.5), target.getZ(), ModSounds.SABER_HIT.get(), SoundSource.PLAYERS,
+                        1.0F, 0.9F + level.getRandom().nextFloat() * 0.2F);
+                level.sendParticles(new DustParticleOptions(color.rgb(), 1.4F), target.getX(), target.getY(0.6), target.getZ(), 18, 0.25, 0.35, 0.25, 0.0);
+                level.sendParticles(ParticleTypes.ELECTRIC_SPARK, target.getX(), target.getY(0.6), target.getZ(), 12, 0.2, 0.3, 0.2, 0.25);
+                level.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY(0.6), target.getZ(), 6, 0.2, 0.3, 0.2, 0.3);
+            }
         }
     }
 

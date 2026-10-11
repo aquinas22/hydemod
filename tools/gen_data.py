@@ -20,9 +20,9 @@ shutil.rmtree(D, ignore_errors=True)
 SIMPLE_ITEMS = ["trash_cube", "neoplas_nugget", "neoplas_ingot", "paradigm_shift_core", "sea_beet", "sea_yam", "sea_cabbage",
                 "sea_salad", "sea_cheesy_baked_potato", "bulletproof_coffee", "soda_stream", "soda", "pat_on_the_back",
                 "mind_upload_blackberry", "reset_the_clock", "maglev_moon_launcher", "einstein_parable", "tedx_invitation",
-                "goober_goo", "elephant_fruit", "super_peanut", "hyde_helmet", "hyde_chestplate", "hyde_leggings", "hyde_boots",
+                "goobers", "peanut", "elephant_fruit", "super_peanut", "hyde_helmet", "hyde_chestplate", "hyde_leggings", "hyde_boots",
                 "green_kyber_crystal", "blue_kyber_crystal", "red_kyber_crystal", "purple_kyber_crystal", "lightsaber_hilt",
-                "sam_hyde_spawn_egg", "elephant_mario_spawn_egg", "goober_spawn_egg", "depth_growler_spawn_egg"]
+                "sam_hyde_spawn_egg", "elephant_mario_spawn_egg", "depth_grovler_spawn_egg"]
 HANDHELD = ["ted_microphone", "pipe_wrench"]
 for name in SIMPLE_ITEMS + HANDHELD:
     w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/handheld" if name in HANDHELD else "minecraft:item/generated",
@@ -30,7 +30,21 @@ for name in SIMPLE_ITEMS + HANDHELD:
     w(f"{A}/items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{M}:item/{name}"}})
 
 # ------------------------------------------------------------------ blocks
-CUBE_ALL = ["green_kyber_ore", "deepslate_blue_kyber_ore", "nether_red_kyber_ore", "end_purple_kyber_ore", "neoplas_block", "trash_cube_block"]
+CUBE_ALL = ["neoplas_block", "trash_cube_block"]
+ORE_BASES = {"green_kyber_ore": ("minecraft:block/stone", "green"), "deepslate_blue_kyber_ore": ("minecraft:block/deepslate", "blue"),
+             "nether_red_kyber_ore": ("minecraft:block/netherrack", "red"), "end_purple_kyber_ore": ("minecraft:block/end_stone", "purple")}
+def full_cube(tex, emit=None):
+    e = {"from": [0, 0, 0], "to": [16, 16, 16],
+         "faces": {d: {"texture": tex, "cullface": d} for d in ("down", "up", "north", "south", "west", "east")}}
+    if emit is not None:
+        e["light_emission"] = emit
+    return e
+for name, (base, color) in ORE_BASES.items():
+    w(f"{A}/blockstates/{name}.json", {"variants": {"": {"model": f"{M}:block/{name}"}}})
+    w(f"{A}/models/block/{name}.json", {"parent": "minecraft:block/block",
+        "textures": {"particle": base, "base": base, "crystals": f"{M}:block/{color}_kyber_crystals"},
+        "elements": [full_cube("#base"), full_cube("#crystals", 15)]})
+    w(f"{A}/items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{M}:block/{name}"}})
 for name in CUBE_ALL:
     w(f"{A}/blockstates/{name}.json", {"variants": {"": {"model": f"{M}:block/{name}"}}})
     w(f"{A}/models/block/{name}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": f"{M}:block/{name}"}})
@@ -88,13 +102,21 @@ HILT = [box([7, -6, 7], [9, 4, 9], "#hilt"),           # grip
 for color in ("green", "blue", "red", "purple"):
     tex = {"hilt": f"{M}:item/lightsaber_hilt_metal", "emitter": f"{M}:item/lightsaber_emitter",
            "blade": f"{M}:item/lightsaber_blade_{color}", "particle": f"{M}:item/lightsaber_hilt_metal"}
+    tex["halo"] = f"{M}:item/lightsaber_halo_{color}"
     w(f"{A}/models/item/{color}_lightsaber_off.json", {"textures": tex, "elements": HILT, "display": SABER_DISPLAY, "gui_light": "front"})
-    w(f"{A}/models/item/{color}_lightsaber_on.json", {"textures": tex, "display": SABER_DISPLAY, "gui_light": "front",
-        "elements": HILT + [box([7.25, 6, 7.25], [8.75, 32, 8.75], "#blade", 15)]})
+    cases = []
+    for step in (1, 2, 3, 4):
+        top = 6 + 25 * step / 4  # halo/tip must stay within the 32-unit model limit
+        blade = [box([7.25, 6, 7.25], [8.75, top, 8.75], "#blade", 15),          # white-hot core
+                 box([6.4, 5.5, 6.4], [9.6, top + 0.6, 9.6], "#halo", 15)]       # translucent glow halo
+        if step == 4:
+            blade.append(box([7.6, top, 7.6], [8.4, top + 0.8, 8.4], "#blade", 15))  # rounded tip
+        w(f"{A}/models/item/{color}_lightsaber_blade{step}.json", {"textures": tex, "display": SABER_DISPLAY, "gui_light": "front",
+            "elements": HILT + blade})
+        cases.append({"when": step, "model": {"type": "minecraft:model", "model": f"{M}:item/{color}_lightsaber_blade{step}"}})
     w(f"{A}/items/{color}_lightsaber.json", {"model": {
-        "type": "minecraft:condition", "property": "minecraft:has_component", "component": f"{M}:ignited",
-        "on_true": {"type": "minecraft:model", "model": f"{M}:item/{color}_lightsaber_on"},
-        "on_false": {"type": "minecraft:model", "model": f"{M}:item/{color}_lightsaber_off"}}})
+        "type": "minecraft:select", "property": "minecraft:component", "component": f"{M}:blade", "cases": cases,
+        "fallback": {"type": "minecraft:model", "model": f"{M}:item/{color}_lightsaber_off"}}})
 
 # ------------------------------------------------------------------ equipment asset (Hyde's Armour)
 w(f"{A}/equipment/hyde.json", {"layers": {"humanoid": [{"texture": f"{M}:hyde"}], "humanoid_leggings": [{"texture": f"{M}:hyde"}]}})
@@ -121,7 +143,8 @@ lang = {
     "item.hydemod.maglev_moon_launcher": "Maglev Moon Launcher",
     "item.hydemod.einstein_parable": "The Einstein Parable",
     "item.hydemod.tedx_invitation": "TEDx Drexel Invitation",
-    "item.hydemod.goober_goo": "Goober Goo",
+    "item.hydemod.goobers": "Goobers",
+    "item.hydemod.peanut": "Peanut",
     "item.hydemod.elephant_fruit": "Elephant Fruit",
     "item.hydemod.super_peanut": "Super Peanut",
     "item.hydemod.pipe_wrench": "Pipe Wrench",
@@ -140,8 +163,7 @@ lang = {
     "item.hydemod.purple_lightsaber": "Purple Lightsaber",
     "item.hydemod.sam_hyde_spawn_egg": "Sam Hyde Spawn Egg",
     "item.hydemod.elephant_mario_spawn_egg": "Elephant Mario Spawn Egg",
-    "item.hydemod.goober_spawn_egg": "Goober Spawn Egg",
-    "item.hydemod.depth_growler_spawn_egg": "Depth Growler Spawn Egg",
+    "item.hydemod.depth_grovler_spawn_egg": "Depth Grovler Spawn Egg",
     "block.hydemod.green_kyber_ore": "Green Kyber Ore",
     "block.hydemod.deepslate_blue_kyber_ore": "Deepslate Blue Kyber Ore",
     "block.hydemod.nether_red_kyber_ore": "Nether Red Kyber Ore",
@@ -152,8 +174,7 @@ lang = {
     "block.hydemod.charging_station": "Lightsaber Charging Station",
     "entity.hydemod.sam_hyde": "Sam Hyde",
     "entity.hydemod.elephant_mario": "Elephant Mario",
-    "entity.hydemod.goober": "Goober",
-    "entity.hydemod.depth_growler": "Depth Growler",
+    "entity.hydemod.depth_grovler": "Depth Grovler",
     "entity.hydemod.thrown_trash_cube": "Cube of Trash",
     "entity.hydemod.trunk_spray": "Trunk Spray",
 
@@ -205,7 +226,7 @@ sam = {
     "reset_clock": "Wait, wait - can we reset the clock? I need another minute. You're playing games with me, huh?",
     "trash": "TRASH ECONOMY! Cubes of trash as money! Everybody becomes rich! It's a gold rush!",
     "close_eyes": "Close your eyes. Everybody. Seal them up. Neurons are firing. This is a pivotal moment.",
-    "growlers": "Rise up, depth growlers! Back from the tiered cities, toiling for nuggets of neoplas!",
+    "grovlers": "Rise up, depth grovlers! Up from the tiered cities, toiling for nuggets of neoplas!",
     "maglev": "Maglev trains to get resources to the Moon. You're the resources.",
     "coffee": "You're drinking Bulletproof Coffee and you don't even realize it. I'm all jagged up in the head!",
     "pat": "Let's pat ourselves on the back. That one's for saving the world.",
@@ -260,7 +281,8 @@ em = {
     "intro": "*TRUMPET* Who ate my fruit?! Somebody is getting stomped.",
     "pound": "GROUND POUND!",
     "spray": "*fwoosh* Trunk spray!",
-    "goobers": "Goobers! Get 'em!",
+    "goobers": "Have some GOOBERS!",
+    "snack": "*munch munch* ...Goobers break.",
     "charge": "*TRUMPET* Here I come!",
     "death": "*sad trumpet* ...my peanuts...",
 }
@@ -270,7 +292,14 @@ for i, v in enumerate(["Oof!", "*angry trumpet*", "Ow, my trunk!", "My ears!", "
     lang[f"boss.hydemod.elephant_mario.hurt.{i}"] = v
 lang.update({
     "tooltip.hydemod.trash_cube": "Currency of the 2070 trash economy. Also throwable.",
-    "tooltip.hydemod.neoplas_nugget": "The depth growlers toil endlessly for these.",
+    "tooltip.hydemod.neoplas_nugget": "The depth grovlers toil endlessly for these.",
+    "tooltip.hydemod.goobers": "Chocolate-covered peanuts. Elephant Mario's favourite.",
+    "tooltip.hydemod.peanut": "Found in tall grass. Coat it in chocolate.",
+    "subtitles.hydemod.lightsaber.ignite": "Lightsaber ignites",
+    "subtitles.hydemod.lightsaber.retract": "Lightsaber retracts",
+    "subtitles.hydemod.lightsaber.hum": "Lightsaber hums",
+    "subtitles.hydemod.lightsaber.swing": "Lightsaber swooshes",
+    "subtitles.hydemod.lightsaber.hit": "Lightsaber strikes",
     "tooltip.hydemod.paradigm_shift_core": "A whole paradigm, shifted. Dropped by Sam Hyde.",
     "tooltip.hydemod.sea_cheesy_baked_potato": "Will blow your socks off. Literally.",
     "tooltip.hydemod.bulletproof_coffee": "Gets you all jagged up in the head.",
@@ -326,14 +355,13 @@ entity_loot("elephant_mario", [
     item(f"{M}:warp_pipe", 4, 6),
     item(f"{M}:pipe_wrench", 1, 1, looting=False),
     item(f"{M}:super_peanut", 3, 5),
-    item(f"{M}:goober_goo", 6, 12),
+    item(f"{M}:goobers", 6, 12),
     item(f"{M}:neoplas_ingot", 3, 6),
 ])
-entity_loot("goober", [item(f"{M}:goober_goo", 0, 2)])
-entity_loot("depth_growler", [item(f"{M}:neoplas_nugget", 1, 3), item(f"{M}:trash_cube", 0, 2, 0.5)])
+entity_loot("depth_grovler", [item(f"{M}:neoplas_nugget", 1, 3), item(f"{M}:trash_cube", 0, 2, 0.4)])
 
 # sea crops from seagrass & kelp (the sea floor farming of 2070)
-for crop, table in (("sea_beet", "seagrass"), ("sea_yam", "tall_seagrass"), ("sea_cabbage", "kelp_plant"), ("sea_cabbage", "kelp")):
+for crop, table in (("peanut", "short_grass"), ("peanut", "tall_grass"), ("sea_beet", "seagrass"), ("sea_yam", "tall_seagrass"), ("sea_cabbage", "kelp_plant"), ("sea_cabbage", "kelp")):
     w(f"{D}/loot_table/gameplay/{crop}_from_{table}.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [
         {"type": "minecraft:item", "name": f"{M}:{crop}"}], "conditions": [{"condition": "minecraft:random_chance", "chance": 0.12}]}]})
     w(f"{D}/loot_modifiers/{crop}_from_{table}.json", {"type": "neoforge:add_table",
@@ -395,10 +423,8 @@ biome_mod("add_red_kyber", "#minecraft:is_nether", "ore_red_kyber")
 biome_mod("add_purple_kyber", "#minecraft:is_end", "ore_purple_kyber")
 
 # mob spawns
-w(f"{D}/neoforge/biome_modifier/spawn_goobers.json", {"type": "neoforge:add_spawns", "biomes": "#minecraft:is_overworld",
-    "spawners": [{"type": f"{M}:goober", "weight": 40, "minCount": 2, "maxCount": 4}]})
-w(f"{D}/neoforge/biome_modifier/spawn_depth_growlers.json", {"type": "neoforge:add_spawns", "biomes": "#minecraft:is_overworld",
-    "spawners": [{"type": f"{M}:depth_growler", "weight": 35, "minCount": 1, "maxCount": 3}]})
+w(f"{D}/neoforge/biome_modifier/spawn_depth_grovlers.json", {"type": "neoforge:add_spawns", "biomes": "#minecraft:is_overworld",
+    "spawners": [{"type": f"{M}:depth_grovler", "weight": 45, "minCount": 2, "maxCount": 4}]})
 
 # ------------------------------------------------------------------ recipes
 def shaped(name, pattern, key, result, count=1, cat="misc"):
@@ -437,7 +463,8 @@ shaped("maglev_moon_launcher", ["  N", " R ", "I  "], {"N": f"{M}:neoplas_ingot"
        f"{M}:maglev_moon_launcher")
 shaped("tedx_invitation", ["PNP", "TBT", "PNP"], {"P": "minecraft:paper", "N": f"{M}:neoplas_nugget", "T": f"{M}:trash_cube",
        "B": "minecraft:writable_book"}, f"{M}:tedx_invitation")
-shaped("elephant_fruit", ["GOG", "OAO", "GOG"], {"G": "minecraft:gold_ingot", "O": f"{M}:goober_goo", "A": "minecraft:apple"},
+shapeless("goobers", [f"{M}:peanut", f"{M}:peanut", "minecraft:cocoa_beans", "minecraft:sugar"], f"{M}:goobers", 4)
+shaped("elephant_fruit", ["GOG", "OAO", "GOG"], {"G": "minecraft:gold_ingot", "O": f"{M}:goobers", "A": "minecraft:apple"},
        f"{M}:elephant_fruit")
 shaped("warp_pipe", ["III", "IEI", "III"], {"I": "minecraft:iron_ingot", "E": "minecraft:ender_pearl"}, f"{M}:warp_pipe", 2)
 shapeless("warp_pipe_dye", [f"{M}:warp_pipe", "minecraft:green_dye"], f"{M}:warp_pipe")

@@ -19,6 +19,9 @@ public final class ModComponents {
     /** Present while a lightsaber blade is lit; drives the item model. */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> IGNITED = COMPONENTS.registerComponentType("ignited",
             b -> b.persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC));
+    /** Blade extension 1-4 while igniting/retracting (4 = fully lit); absent when off. Drives the item model. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> BLADE = COMPONENTS.registerComponentType("blade",
+            b -> b.persistent(Codec.intRange(1, 4)).networkSynchronized(ByteBufCodecs.VAR_INT));
     /** First warp pipe selected with the pipe wrench. */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>> PIPE_LINK = COMPONENTS.registerComponentType("pipe_link",
             b -> b.persistent(GlobalPos.CODEC).networkSynchronized(GlobalPos.STREAM_CODEC));

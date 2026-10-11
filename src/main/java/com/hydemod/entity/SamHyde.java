@@ -42,7 +42,7 @@ import org.jspecify.annotations.Nullable;
  * Abilities (one every few seconds while he has a target):
  *  - Trash Economy: hurls a volley of trash cubes.
  *  - "Close your eyes": blinds everyone nearby.
- *  - Depth Growlers: calls up underground toilers from the tiered cities.
+ *  - Depth Grovlers: calls up underground toilers from the tiered cities.
  *  - Maglev to the Moon: launches his target into the sky.
  *  - Bulletproof Coffee: gets all jagged up (speed + strength).
  *  - Pat on the back: heals himself.
@@ -75,7 +75,7 @@ public class SamHyde extends HydeBoss {
         goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8));
         goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 16.0F));
         goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        targetSelector.addGoal(1, new HurtByTargetGoal(this, DepthGrowler.class));
+        targetSelector.addGoal(1, new HurtByTargetGoal(this, DepthGrovler.class));
         targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
@@ -115,7 +115,7 @@ public class SamHyde extends HydeBoss {
         switch (random.nextInt(7)) {
             case 0, 1 -> trashVolley(level, target, enraged ? 5 : 3);
             case 2 -> closeYourEyes(level);
-            case 3 -> summonGrowlers(level);
+            case 3 -> summonGrovlers(level);
             case 4 -> maglev(level, target);
             case 5 -> bulletproofCoffee();
             default -> patOnTheBack(level);
@@ -145,16 +145,16 @@ public class SamHyde extends HydeBoss {
         level.playSound(null, blockPosition(), SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.HOSTILE, 1.0F, 1.2F);
     }
 
-    private void summonGrowlers(ServerLevel level) {
-        int existing = level.getEntitiesOfClass(DepthGrowler.class, getBoundingBox().inflate(24.0)).size();
-        if (existing >= 6) {
+    private void summonGrovlers(ServerLevel level) {
+        int existing = level.getEntitiesOfClass(DepthGrovler.class, getBoundingBox().inflate(24.0)).size();
+        if (existing >= 8) {
             bulletproofCoffee();
             return;
         }
-        say("boss.hydemod.sam_hyde.growlers");
-        for (int i = 0; i < 3; i++) {
+        say("boss.hydemod.sam_hyde.grovlers");
+        for (int i = 0; i < 4; i++) {
             BlockPos pos = blockPosition().offset(random.nextInt(7) - 3, 0, random.nextInt(7) - 3);
-            DepthGrowler growler = ModEntities.DEPTH_GROWLER.get().spawn(level, pos, EntitySpawnReason.MOB_SUMMONED);
+            DepthGrovler growler = ModEntities.DEPTH_GROVLER.get().spawn(level, pos, EntitySpawnReason.MOB_SUMMONED);
             if (growler != null) {
                 growler.setTarget(getTarget());
                 level.sendParticles(ParticleTypes.LARGE_SMOKE, growler.getX(), growler.getY() + 1, growler.getZ(), 15, 0.3, 0.6, 0.3, 0.02);
@@ -185,7 +185,7 @@ public class SamHyde extends HydeBoss {
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        if (source.getDirectEntity() instanceof DepthGrowler) {
+        if (source.getDirectEntity() instanceof DepthGrovler) {
             return false; // his own toilers can't hurt him
         }
         boolean hurt = super.hurtServer(level, source, damage);

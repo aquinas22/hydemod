@@ -96,7 +96,14 @@ public final class ModItems {
             p -> new SummonBossItem(p, ModEntities.SAM_HYDE::get, "message.hydemod.sam_hyde_summoned"), p -> p.stacksTo(1).rarity(Rarity.EPIC));
 
     // ---------------------------------------------------------------- Elephant Mario
-    public static final DeferredItem<Item> GOOBER_GOO = ITEMS.registerSimpleItem("goober_goo");
+    public static final DeferredItem<Item> PEANUT = ITEMS.registerSimpleItem("peanut",
+            p -> p.food(new FoodProperties.Builder().nutrition(1).saturationModifier(0.3F).build()));
+    /** Goobers: chocolate-covered peanuts. Elephant Mario's favourite candy. */
+    public static final DeferredItem<Item> GOOBERS = ITEMS.registerSimpleItem("goobers",
+            p -> p.food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.5F).alwaysEdible().build(),
+                    Consumables.defaultFood().consumeSeconds(0.8F).onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                            new MobEffectInstance(MobEffects.SPEED, 20 * 20, 0),
+                            new MobEffectInstance(MobEffects.JUMP_BOOST, 20 * 20, 0)))).build()));
     public static final DeferredItem<SummonBossItem> ELEPHANT_FRUIT = ITEMS.registerItem("elephant_fruit",
             p -> new SummonBossItem(p, ModEntities.ELEPHANT_MARIO::get, "message.hydemod.elephant_mario_summoned"), p -> p.stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<Item> SUPER_PEANUT = ITEMS.registerSimpleItem("super_peanut",
@@ -148,10 +155,8 @@ public final class ModItems {
             p -> p.spawnEgg(ModEntities.SAM_HYDE.get()));
     public static final DeferredItem<SpawnEggItem> ELEPHANT_MARIO_SPAWN_EGG = ITEMS.registerItem("elephant_mario_spawn_egg", SpawnEggItem::new,
             p -> p.spawnEgg(ModEntities.ELEPHANT_MARIO.get()));
-    public static final DeferredItem<SpawnEggItem> GOOBER_SPAWN_EGG = ITEMS.registerItem("goober_spawn_egg", SpawnEggItem::new,
-            p -> p.spawnEgg(ModEntities.GOOBER.get()));
-    public static final DeferredItem<SpawnEggItem> DEPTH_GROWLER_SPAWN_EGG = ITEMS.registerItem("depth_growler_spawn_egg", SpawnEggItem::new,
-            p -> p.spawnEgg(ModEntities.DEPTH_GROWLER.get()));
+    public static final DeferredItem<SpawnEggItem> DEPTH_GROVLER_SPAWN_EGG = ITEMS.registerItem("depth_grovler_spawn_egg", SpawnEggItem::new,
+            p -> p.spawnEgg(ModEntities.DEPTH_GROVLER.get()));
 
     private static DeferredItem<LightsaberItem> lightsaber(KyberColor color) {
         return ITEMS.registerItem(color.getSerializedName() + "_lightsaber", p -> new LightsaberItem(p, color),

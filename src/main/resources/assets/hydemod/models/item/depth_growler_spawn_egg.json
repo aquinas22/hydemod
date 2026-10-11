@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "hydemod:item/depth_growler_spawn_egg"
-  }
-}

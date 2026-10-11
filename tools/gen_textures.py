@@ -1084,5 +1084,276 @@ def main():
     save(hyde_armor_layer(True), "entity/equipment/humanoid_leggings/hyde.png")
     print("textures written to", os.path.abspath(ROOT))
 
+# ================================================================== v1.1 additions
+import json as _json
+
+def save_anim(frames, path, frametime=2, interpolate=True):
+    """Stacks frames vertically and writes the .mcmeta animation file next to the png."""
+    w, h = frames[0].size
+    sheet = Image.new("RGBA", (w, h * len(frames)), (0, 0, 0, 0))
+    for i, f in enumerate(frames):
+        sheet.paste(f, (0, i * h))
+    save(sheet, path)
+    with open(os.path.join(ROOT, path) + ".mcmeta", "w") as fh:
+        _json.dump({"animation": {"frametime": frametime, "interpolate": interpolate}}, fh)
+
+# ---- kyber crystal overlay: clusters of hexagonal shards that pulse and twinkle (transparent elsewhere)
+CLUSTERS = [  # (base x, base y, shard heights, lean)
+    (2, 6, [4, 6, 3], 0), (10, 4, [3, 5, 4], 1), (5, 14, [5, 7, 4, 3], 0), (12, 14, [4, 3], -1), (8, 9, [2, 3], 0),
+]
+
+def crystal_overlay(color, phase):
+    img = new()
+    glow = (math.sin(phase * 2 * math.pi) + 1) / 2  # 0..1 pulse
+    dark = shade(color, 0.55 + 0.15 * glow); mid = shade(color, 0.95 + 0.25 * glow)
+    light = shade(color, 1.35 + 0.3 * glow); white = mix(color, hexc("ffffff"), 0.75 + 0.2 * glow)
+    for (bx, by, heights, lean) in CLUSTERS:
+        for i, hgt in enumerate(heights):
+            x = bx + i - len(heights) // 2
+            for k in range(hgt):
+                yy = by - k
+                xx = x + (lean if k > hgt // 2 else 0)
+                if 0 <= xx < 16 and 0 <= yy < 16:
+                    c = light if k == hgt - 1 else (mid if (i + k) % 2 == 0 else dark)
+                    img.putpixel((xx, yy), c)
+            # bright tip
+            tx = x + (lean if hgt - 1 > hgt // 2 else 0); ty = by - hgt + 1
+            if 0 <= tx < 16 and 0 <= ty < 16:
+                img.putpixel((tx, ty), white)
+    # travelling twinkle
+    stars = [(2, 1), (10, 1), (5, 8), (13, 10), (8, 6), (3, 12)]
+    sx, sy = stars[int(phase * len(stars)) % len(stars)]
+    if glow > 0.3:
+        for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)):
+            if 0 <= sx + dx < 16 and 0 <= sy + dy < 16:
+                img.putpixel((sx + dx, sy + dy), hexc("ffffff") if (dx, dy) == (0, 0) else light)
+    return img
+
+# ---- lightsaber blade: hot white core with flickering streaks, and a soft translucent halo
+def blade_core_frames(color, n=8):
+    frames = []
+    r = random.Random(sum(color[:3]))
+    for f in range(n):
+        img = new()
+        flick = 0.9 + 0.1 * math.sin(f / n * 2 * math.pi)
+        for y in range(16):
+            streak = r.random() < 0.18
+            for x in range(16):
+                d = abs(x - 7.5) / 7.5
+                if d < 0.45:
+                    c = mix(hexc("ffffff"), color, 0.08 if not streak else 0.25)
+                elif d < 0.8:
+                    c = mix(hexc("ffffff"), color, (d - 0.45) / 0.35 * 0.85)
+                else:
+                    c = shade(color, 1.15)
+                img.putpixel((x, y), shade(c, flick))
+        frames.append(img)
+    return frames
+
+def blade_halo_frames(color, n=8):
+    frames = []
+    for f in range(n):
+        img = new()
+        pulse = 0.75 + 0.25 * math.sin(f / n * 2 * math.pi)
+        for y in range(16):
+            for x in range(16):
+                d = abs(x - 7.5) / 7.5
+                a = int(max(0, 1 - d) ** 1.4 * 150 * pulse) + 20
+                img.putpixel((x, y), shade(color, 1.25)[:3] + (min(255, a),))
+        frames.append(img)
+    return frames
+
+# ---- Sam Hyde, 2070 Paradigm Shift look (full 64x64 player-skin layout)
+def paint_box(img, u, v, w, h, d, faces):
+    box_uv(img, u, v, w, h, d, faces)
+
+def sam_hyde_2070():
+    img = new(64, 64)
+    skin = hexc("e7b896"); skin_dk = hexc("c99677"); beard = hexc("8a6240"); beard_dk = hexc("6e4c31")
+    beanie = hexc("6e1f2a"); beanie_dk = hexc("531620"); beanie_hi = hexc("8a2a37")
+    glass = hexc("c9b27a"); eye = hexc("4a6a8a"); white = hexc("f4f4f4"); lens = hexc("d8e6f0")
+    shirt = hexc("8c2a33"); shirt_dk = hexc("6c1e26"); shirt_hi = hexc("a83a44")
+    gold = hexc("b8933a"); gold_hi = hexc("e2c46a"); gold_dk = hexc("7a5e22"); stud = hexc("2a2418")
+    jeans = hexc("2b3140"); jeans_dk = hexc("1f2430"); shoe = hexc("1b1b1b")
+
+    def face(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.03, 1)
+        for x in range(x0, x0 + w):   # beanie covers the top of the head
+            img.putpixel((x, y0), beanie); img.putpixel((x, y0 + 1), beanie_dk)
+        # wire glasses
+        for x in (1, 2, 3, 4, 5, 6):
+            img.putpixel((x0 + x, y0 + 3), glass)
+        img.putpixel((x0 + 1, y0 + 4), glass); img.putpixel((x0 + 3, y0 + 4), glass)
+        img.putpixel((x0 + 4, y0 + 4), glass); img.putpixel((x0 + 6, y0 + 4), glass)
+        img.putpixel((x0 + 2, y0 + 4), eye); img.putpixel((x0 + 5, y0 + 4), eye)
+        img.putpixel((x0 + 0, y0 + 3), glass); img.putpixel((x0 + 7, y0 + 3), glass)
+        img.putpixel((x0 + 2, y0 + 2), beard_dk); img.putpixel((x0 + 5, y0 + 2), beard_dk)  # brows
+        img.putpixel((x0 + 3, y0 + 5), skin_dk); img.putpixel((x0 + 4, y0 + 5), skin_dk)  # nose
+        # mustache + goatee + stubble jaw
+        for x in (2, 3, 4, 5): img.putpixel((x0 + x, y0 + 6), beard)
+        img.putpixel((x0 + 3, y0 + 6), hexc("9a4a40")); img.putpixel((x0 + 4, y0 + 6), hexc("9a4a40"))  # lips peek
+        img.putpixel((x0 + 1, y0 + 6), shade(skin, 0.9)); img.putpixel((x0 + 6, y0 + 6), shade(skin, 0.9))
+        for x in range(1, 7): img.putpixel((x0 + x, y0 + 7), beard if 2 <= x <= 5 else shade(skin, 0.85))
+        img.putpixel((x0 + 3, y0 + 7), beard_dk); img.putpixel((x0 + 4, y0 + 7), beard_dk)
+    def head_side(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.03, 2)
+        for x in range(x0, x0 + w):
+            img.putpixel((x, y0), beanie); img.putpixel((x, y0 + 1), beanie_dk)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + 3), glass if x - x0 >= w - 3 or x - x0 < 3 else skin)
+        img.putpixel((x0 + w // 2, y0 + 4), skin_dk)  # ear
+        for y in range(y0 + 5, y0 + h): img.putpixel((x0 + (0 if x0 % 2 else w - 1), y), shade(skin, 0.88))
+    def head_back(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), hexc("4a3322"), 0.08, 3)
+        for x in range(x0, x0 + w):
+            for y in range(y0, y0 + 3): img.putpixel((x, y), beanie)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), skin)
+    box_uv(img, 0, 0, 8, 8, 8, {"front": face, "right": head_side, "left": head_side, "back": head_back,
+                               "top": solid(beanie, 0.06, 4), "bottom": solid(skin)})
+    # hat overlay = the knit beanie: ribbed cuff around the head + slouch on top
+    def beanie_band(img, x0, y0, w, h):
+        for x in range(x0, x0 + w):
+            img.putpixel((x, y0), beanie_hi if x % 2 else beanie)
+            img.putpixel((x, y0 + 1), beanie if x % 2 else beanie_dk)
+            img.putpixel((x, y0 + 2), beanie_dk if x % 2 else shade(beanie_dk, 0.85))  # folded cuff
+    box_uv(img, 32, 0, 8, 8, 8, {"front": beanie_band, "right": beanie_band, "left": beanie_band, "back": beanie_band,
+                                "top": solid(beanie_hi, 0.08, 5)})
+    # body (base layer): burgundy long-sleeve shirt
+    def shirt_face(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), shirt, 0.06, 6)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), jeans)
+    box_uv(img, 16, 16, 8, 12, 4, {"default": shirt_face})
+    # jacket overlay: gold studded breastplate (front + back), shirt shows at the sides
+    def plate(img, x0, y0, w, h, back=False):
+        for y in range(y0, y0 + h - 2):
+            for x in range(x0, x0 + w):
+                gx, gy = x - x0, y - y0
+                c = gold_hi if gx in (1, 2) and not back else (gold_dk if gx == w - 1 else gold)
+                if gy == 0 or gy == h - 3: c = gold_dk
+                img.putpixel((x, y), c)
+        # rows of dark studs, offset every other row
+        for gy in range(1, h - 3, 2):
+            for gx in range((gy // 2) % 2, w, 2):
+                img.putpixel((x0 + gx, y0 + gy), stud)
+                if gy + 1 < h - 3 and gx + 1 < w: img.putpixel((x0 + gx, y0 + gy + 1), gold_hi)
+        if not back:  # collar opening showing the shirt
+            img.putpixel((x0 + 3, y0), shirt); img.putpixel((x0 + 4, y0), shirt); img.putpixel((x0 + 3, y0 + 1), shirt_dk); img.putpixel((x0 + 4, y0 + 1), shirt_dk)
+    def plate_side(img, x0, y0, w, h):
+        for y in range(y0, y0 + h - 2):
+            for x in range(x0, x0 + w): img.putpixel((x, y), gold_dk if y % 3 else stud)
+    box_uv(img, 16, 32, 8, 12, 4, {"front": plate, "back": lambda i, a, b, c, d: plate(i, a, b, c, d, True),
+                                  "right": plate_side, "left": plate_side, "top": solid(gold, 0.05, 7)})
+    # arms: burgundy sleeves, hands; sleeve overlays carry studded gold pauldrons on the shoulders
+    def arm(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), shirt, 0.07, 8)
+        for y in range(y0, y0 + h - 2, 3): img.putpixel((x0 + (y % w), y), shirt_dk)  # folds
+        for x in range(x0, x0 + w):
+            for y in range(y0 + h - 3, y0 + h): img.putpixel((x, y), skin)
+    def pauldron(img, x0, y0, w, h):
+        for y in range(y0, y0 + 4):
+            for x in range(x0, x0 + w):
+                img.putpixel((x, y), stud if (x + y) % 3 == 0 else (gold_hi if y == y0 else gold))
+    for (u, v) in ((40, 16), (32, 48)):
+        box_uv(img, u, v, 4, 12, 4, {"default": arm, "top": solid(shirt), "bottom": solid(skin)})
+    for (u, v) in ((40, 32), (48, 48)):
+        box_uv(img, u, v, 4, 12, 4, {"default": pauldron, "top": solid(gold, 0.05, 9), "bottom": lambda *a: None})
+    # legs: dark jeans + black shoes
+    def leg(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), jeans, 0.06, 10)
+        for y in range(y0, y0 + h - 2): img.putpixel((x0 + w - 1, y), jeans_dk)
+        for x in range(x0, x0 + w):
+            for y in range(y0 + h - 2, y0 + h): img.putpixel((x, y), shoe)
+    for (u, v) in ((0, 16), (16, 48)):
+        box_uv(img, u, v, 4, 12, 4, {"default": leg, "top": solid(jeans), "bottom": solid(shoe)})
+    return img
+
+def hyde_armor_2070(leggings=False):
+    """Hyde's Armour = the gold studded breastplate + maroon knit beanie from the talk."""
+    img = new(64, 32)
+    gold = hexc("b8933a"); gold_hi = hexc("e2c46a"); gold_dk = hexc("7a5e22"); stud = hexc("2a2418")
+    beanie = hexc("6e1f2a"); beanie_dk = hexc("531620"); beanie_hi = hexc("8a2a37")
+    def studded(img, x0, y0, w, h):
+        for y in range(y0, y0 + h):
+            for x in range(x0, x0 + w):
+                gx, gy = x - x0, y - y0
+                c = gold_dk if gy in (0, h - 1) or gx == w - 1 else (gold_hi if gx == 0 else gold)
+                if gy % 2 == 1 and (gx + gy // 2) % 2 == 0 and 0 < gy < h - 1: c = stud
+                img.putpixel((x, y), c)
+    if not leggings:
+        def beanie_face(img, x0, y0, w, h):
+            for y in range(y0, y0 + h):
+                for x in range(x0, x0 + w):
+                    gy = y - y0
+                    if gy < 4: img.putpixel((x, y), beanie_hi if (x % 2 and gy == 3) else (beanie if gy < 3 else beanie_dk))
+        box_uv(img, 0, 0, 8, 8, 8, {"default": beanie_face, "top": solid(beanie_hi, 0.08, 11), "bottom": lambda *a: None})
+        box_uv(img, 16, 16, 8, 12, 4, {"default": studded})
+        box_uv(img, 40, 16, 4, 12, 4, {"default": lambda i, x0, y0, w, h: studded(i, x0, y0, w, min(h, 5))})
+        box_uv(img, 0, 16, 4, 12, 4, {"default": lambda i, x0, y0, w, h: studded(i, x0, y0 + max(0, h - 4), w, min(h, 4))})
+    else:
+        box_uv(img, 16, 16, 8, 12, 4, {"default": lambda i, x0, y0, w, h: studded(i, x0, y0, w, min(h, 5))})
+        box_uv(img, 0, 16, 4, 12, 4, {"default": studded})
+    return img
+
+def goobers_item():
+    """A little carton of chocolate-covered peanuts with a few spilling out (original generic packaging)."""
+    img = new()
+    box = hexc("e8d24a"); box_dk = hexc("b89a2a"); choc = hexc("5a3218"); choc_hi = hexc("8a5a34"); choc_dk = hexc("3a1e0c")
+    for y in range(2, 11):
+        for x in range(3, 11):
+            img.putpixel((x, y), box if x < 9 else box_dk)
+    for x in range(3, 11): img.putpixel((x, 2), hexc("f6e88a"))
+    for x in range(4, 9): img.putpixel((x, 6), hexc("c0392b"))  # plain red stripe
+    for (cx, cy) in ((11, 12), (7, 13), (3, 12), (12, 9)):
+        for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1), (-1, 0), (0, -1)):
+            x, y = cx + dx, cy + dy
+            if 0 <= x < 16 and 0 <= y < 16: img.putpixel((x, y), choc)
+        img.putpixel((cx, cy - 1 if cy > 0 else cy), choc_hi); img.putpixel((cx + 1, cy + 1), choc_dk)
+    return outline(img, hexc("2a1408"))
+
+def peanut_item():
+    img = new()
+    shell = hexc("d9b27a"); dk = hexc("a8824a")
+    rows = ["................",
+            "................",
+            "................",
+            ".........sss....",
+            "........sSsSs...",
+            "........ssssd...",
+            ".........ssd....",
+            "........ssd.....",
+            ".......sssss....",
+            "......sSsSsss...",
+            "......sssssd....",
+            ".......sssdd....",
+            "........ddd.....",
+            "................",
+            "................",
+            "................"]
+    draw_rows(img, rows, {"s": shell, "S": dk, "d": dk, ".": None})
+    return outline(img, hexc("3a2410"))
+
+def main_v11():
+    # Sam Hyde 2070 + Hyde's Armour
+    save(sam_hyde_2070(), "entity/sam_hyde.png")
+    save(hyde_armor_2070(False), "entity/equipment/humanoid/hyde.png")
+    save(hyde_armor_2070(True), "entity/equipment/humanoid_leggings/hyde.png")
+    save(goober(), "entity/depth_grovler.png")
+    # ores: glowing, pulsing crystal overlays (base stone comes from vanilla textures)
+    for name, c in KYBER.items():
+        save_anim([crystal_overlay(c, f / 12) for f in range(12)], f"block/{name}_kyber_crystals.png", 2)
+    # lightsaber glow
+    for name, c in KYBER.items():
+        save_anim(blade_core_frames(c), f"item/lightsaber_blade_{name}.png", 1)
+        save_anim(blade_halo_frames(c), f"item/lightsaber_halo_{name}.png", 2)
+    save(goobers_item(), "item/goobers.png")
+    save(peanut_item(), "item/peanut.png")
+    save(spawn_egg(hexc("8a4fd0"), hexc("c9b27a")), "item/depth_grovler_spawn_egg.png")
+    # retire v1.0 files
+    for old in ("entity/goober.png", "entity/depth_growler.png", "item/goober_goo.png", "item/goober_spawn_egg.png",
+                "item/depth_growler_spawn_egg.png", "block/green_kyber_ore.png", "block/deepslate_blue_kyber_ore.png",
+                "block/nether_red_kyber_ore.png", "block/end_purple_kyber_ore.png"):
+        pth = os.path.join(ROOT, old)
+        if os.path.exists(pth): os.remove(pth)
+
 if __name__ == "__main__":
     main()
+    main_v11()

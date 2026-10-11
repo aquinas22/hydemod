@@ -3,9 +3,8 @@ package com.hydemod.event;
 import com.hydemod.HydeMod;
 import com.hydemod.block.ChargingStationBlockEntity;
 import com.hydemod.block.WarpPipeBlock;
-import com.hydemod.entity.DepthGrowler;
 import com.hydemod.entity.ElephantMario;
-import com.hydemod.entity.Goober;
+import com.hydemod.entity.DepthGrovler;
 import com.hydemod.entity.SamHyde;
 import com.hydemod.item.LightsaberItem;
 import com.hydemod.registry.ModBlockEntities;
@@ -41,16 +40,13 @@ public final class CommonEvents {
     static void onAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntities.SAM_HYDE.get(), SamHyde.createAttributes().build());
         event.put(ModEntities.ELEPHANT_MARIO.get(), ElephantMario.createAttributes().build());
-        event.put(ModEntities.GOOBER.get(), Goober.createAttributes().build());
-        event.put(ModEntities.DEPTH_GROWLER.get(), DepthGrowler.createAttributes().build());
+        event.put(ModEntities.DEPTH_GROVLER.get(), DepthGrovler.createAttributes().build());
     }
 
     @SubscribeEvent
     static void onSpawnPlacements(RegisterSpawnPlacementsEvent event) {
-        event.register(ModEntities.GOOBER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Goober::checkGooberSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ModEntities.DEPTH_GROWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                DepthGrowler::checkGrowlerSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.DEPTH_GROVLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                DepthGrovler::checkGrovlerSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     @SubscribeEvent
