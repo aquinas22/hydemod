@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " II",
+    " CI",
+    "C  "
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "C": "minecraft:iron_chain"
+  },
+  "result": {
+    "id": "hydemod:grappling_hook",
+    "count": 1
+  }
+}

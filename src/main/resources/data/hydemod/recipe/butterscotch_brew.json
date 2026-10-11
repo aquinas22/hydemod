@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glass_bottle",
+    "minecraft:sugar",
+    "minecraft:milk_bucket",
+    "minecraft:honey_bottle"
+  ],
+  "result": {
+    "id": "hydemod:butterscotch_brew",
+    "count": 1
+  }
+}

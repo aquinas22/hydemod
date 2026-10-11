@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:bread",
+    "minecraft:honey_bottle",
+    "minecraft:oak_leaves",
+    "minecraft:golden_apple"
+  ],
+  "result": {
+    "id": "hydemod:elven_waybread",
+    "count": 3
+  }
+}

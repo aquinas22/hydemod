@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "N N",
+    "NDN",
+    "NNN"
+  ],
+  "key": {
+    "N": "minecraft:iron_nugget",
+    "D": "minecraft:diamond_block"
+  },
+  "result": {
+    "id": "hydemod:mithril_mail",
+    "count": 1
+  }
+}

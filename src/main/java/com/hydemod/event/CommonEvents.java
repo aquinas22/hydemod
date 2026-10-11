@@ -61,9 +61,27 @@ public final class CommonEvents {
 
     // ------------------------------------------------------------------ game bus
 
-    /** Unlit or unpowered lightsabers are just metal tubes. */
+    /** Unlit or unpowered lightsabers are just metal tubes; Reflector Badge; Chrono Pendant. */
     @SubscribeEvent
     static void onIncomingDamage(LivingIncomingDamageEvent event) {
+        if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player && player.level() instanceof ServerLevel level) {
+            // Reflector Badge: half of any projectile's damage bounces straight back at whoever fired it.
+            if (event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_PROJECTILE) && hasItem(player, ModItems.REFLECTOR_BADGE.get())
+                    && event.getSource().getEntity() instanceof LivingEntity shooter && shooter != player) {
+                float reflected = event.getAmount() * 0.5F;
+                event.setAmount(event.getAmount() - reflected);
+                shooter.hurtServer(level, player.damageSources().thorns(player), reflected);
+                level.sendParticles(net.minecraft.core.particles.ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY(0.6), player.getZ(), 15, 0.3, 0.4, 0.3, 0.2);
+            }
+            // Chrono Pendant: a fatal blow rewinds you ten seconds instead.
+            if (event.getAmount() >= player.getHealth() + player.getAbsorptionAmount()) {
+                ItemStack pendant = findItem(player, ModItems.CHRONO_PENDANT.get());
+                if (!pendant.isEmpty() && com.hydemod.item.realm.RetroItems.ChronoPendant.rewind(player, pendant)) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+        }
         boolean meleeHit = event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)
                 || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK);
         if (meleeHit && event.getSource().getDirectEntity() instanceof LivingEntity attacker && event.getSource().getEntity() == attacker) {
@@ -81,11 +99,23 @@ public final class CommonEvents {
         if (!(player.level() instanceof ServerLevel level)) {
             return;
         }
+        if (player.tickCount % 20 == 0 && player instanceof net.minecraft.server.level.ServerPlayer sp && hasItem(player, ModItems.CHRONO_PENDANT.get())) {
+            com.hydemod.item.realm.RetroItems.ChronoPendant.record(sp);
+        }
         if (player.tickCount % 20 == 0 && wearingFullHyde(player)) {
             player.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 20 * 3, 0, true, false, true));
             player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20 * 3, 0, true, false, true));
             player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * 3, 0, true, false, true));
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 20 * 15, 0, true, false, true));
+        }
+        // Ring of Unseeing: held in either hand you vanish and monsters lose track of you, but it gnaws at you.
+        if (player.tickCount % 20 == 0 && (player.getMainHandItem().is(ModItems.RING_OF_UNSEEING.get()) || player.getOffhandItem().is(ModItems.RING_OF_UNSEEING.get()))) {
+            player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 40, 0, true, false, true));
+            player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 40, 0, true, false, false));
+            for (net.minecraft.world.entity.Mob mob : level.getEntitiesOfClass(net.minecraft.world.entity.Mob.class, player.getBoundingBox().inflate(24),
+                    m -> m instanceof net.minecraft.world.entity.monster.Enemy && !(m instanceof com.hydemod.entity.HydeBoss) && m.getTarget() == player)) {
+                mob.setTarget(null);
+            }
         }
         if (!player.isShiftKeyDown()) {
             WarpPipeBlock.clearWarped(player);
@@ -97,6 +127,26 @@ public final class CommonEvents {
                 WarpPipeBlock.tryWarpFromInside(level, feet.below(), player);
             }
         }
+    }
+
+    private static boolean hasItem(Player player, net.minecraft.world.item.Item item) {
+        return !findItem(player, item).isEmpty();
+    }
+
+    private static ItemStack findItem(Player player, net.minecraft.world.item.Item item) {
+        var inv = player.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            if (inv.getItem(i).is(item)) {
+                return inv.getItem(i);
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @SubscribeEvent
+    static void onLogout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
+        com.hydemod.item.realm.RetroItems.ChronoPendant.forget(event.getEntity());
+        WarpPipeBlock.clearWarped(event.getEntity());
     }
 
     public static boolean wearingFullHyde(Player player) {

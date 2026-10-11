@@ -12,6 +12,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 
 @Mod(value = HydeMod.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = HydeMod.MODID, value = Dist.CLIENT)
@@ -33,11 +34,18 @@ public final class HydeModClient {
         event.registerEntityRenderer(ModEntities.DEPTH_GROVLER.get(), HydeMobRenderers.DepthGrovlerRenderer::new);
         event.registerEntityRenderer(ModEntities.THROWN_TRASH_CUBE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.2F, false));
         event.registerEntityRenderer(ModEntities.TRUNK_SPRAY.get(), ctx -> new ThrownItemRenderer<>(ctx, 0.8F, true));
+        event.registerEntityRenderer(ModEntities.THROWN_BOMB.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, false));
     }
 
     @SubscribeEvent
     static void onClientTick(ClientTickEvent.Post event) {
         LightsaberHumSound.tickAll();
         BossMusic.tick();
+        BossCallOverlay.tick();
+    }
+
+    @SubscribeEvent
+    static void onGuiLayers(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(BossCallOverlay.ID, BossCallOverlay::render);
     }
 }

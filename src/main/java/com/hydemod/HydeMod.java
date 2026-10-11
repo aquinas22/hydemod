@@ -6,6 +6,7 @@ import com.hydemod.registry.ModComponents;
 import com.hydemod.registry.ModEntities;
 import com.hydemod.registry.ModItems;
 import com.hydemod.registry.ModSounds;
+import com.hydemod.registry.ModEffects;
 import com.hydemod.registry.ModTabs;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.Identifier;
@@ -22,6 +23,7 @@ public class HydeMod {
     public HydeMod(IEventBus modBus, ModContainer container) {
         ModComponents.COMPONENTS.register(modBus);
         ModSounds.SOUNDS.register(modBus);
+        ModEffects.EFFECTS.register(modBus);
         ModBlocks.BLOCKS.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);

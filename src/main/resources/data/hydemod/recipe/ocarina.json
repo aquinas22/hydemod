@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    "CNC",
+    " C "
+  ],
+  "key": {
+    "C": "minecraft:clay_ball",
+    "N": "minecraft:note_block"
+  },
+  "result": {
+    "id": "hydemod:ocarina",
+    "count": 1
+  }
+}

@@ -399,16 +399,16 @@ for crop, table in (("peanut", "short_grass"), ("peanut", "tall_grass"), ("sea_b
 def tag(path, values):
     w(f"{BASE}/data/{path}.json", {"replace": False, "values": values})
 ores = [f"{M}:green_kyber_ore", f"{M}:deepslate_blue_kyber_ore", f"{M}:nether_red_kyber_ore", f"{M}:end_purple_kyber_ore"]
-tag("minecraft/tags/block/mineable/pickaxe", ores + [f"{M}:neoplas_block", f"{M}:warp_pipe", f"{M}:charging_station"])
+tag("minecraft/tags/block/mineable/pickaxe", ores + [f"{M}:neoplas_block", f"{M}:warp_pipe", f"{M}:charging_station", f"{M}:lamp_post"])
 tag("minecraft/tags/block/mineable/shovel", [f"{M}:trash_cube_block"])
 tag("minecraft/tags/block/needs_iron_tool", [f"{M}:green_kyber_ore", f"{M}:deepslate_blue_kyber_ore", f"{M}:neoplas_block"])
 tag("minecraft/tags/block/needs_diamond_tool", [f"{M}:nether_red_kyber_ore", f"{M}:end_purple_kyber_ore"])
 tag("hydemod/tags/item/repairs_hyde_armour", [f"{M}:neoplas_ingot"])
 tag("minecraft/tags/item/head_armor", [f"{M}:hyde_helmet"])
-tag("minecraft/tags/item/chest_armor", [f"{M}:hyde_chestplate"])
+tag("minecraft/tags/item/chest_armor", [f"{M}:hyde_chestplate", f"{M}:mithril_mail"])
 tag("minecraft/tags/item/leg_armor", [f"{M}:hyde_leggings"])
 tag("minecraft/tags/item/foot_armor", [f"{M}:hyde_boots"])
-tag("minecraft/tags/item/swords", [f"{M}:{c}_lightsaber" for c in ("green", "blue", "red", "purple")] + [f"{M}:ted_microphone"])
+tag("minecraft/tags/item/swords", [f"{M}:{c}_lightsaber" for c in ("green", "blue", "red", "purple")] + [f"{M}:ted_microphone", f"{M}:elven_blade"])
 
 # ------------------------------------------------------------------ worldgen: kyber ores
 def ore_feature(name, targets, size, discard=0.0):
@@ -510,5 +510,148 @@ for ore, crystal in (("green_kyber_ore", "green_kyber_crystal"), ("deepslate_blu
                      ("nether_red_kyber_ore", "red_kyber_crystal"), ("end_purple_kyber_ore", "purple_kyber_crystal")):
     smelt(crystal, f"{M}:{ore}", f"{M}:{crystal}", 1.0)
 smelt("neoplas_nugget_from_trash", f"{M}:trash_cube_block", f"{M}:neoplas_nugget", 0.3)
+
+# ================================================================== realm items
+REALM_SIMPLE = ["turkish_delight", "healing_cordial", "invisibility_cloak", "butterscotch_brew", "power_mushroom", "blaze_blossom",
+                "invincibility_star", "heart_vessel", "bomb", "ocarina", "ring_of_unseeing", "mithril_mail", "elven_waybread", "star_phial"]
+REALM_HANDHELD = ["stone_spell_wand", "wizard_wand", "flying_broom", "grappling_hook"]
+for name in REALM_SIMPLE + REALM_HANDHELD:
+    w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/handheld" if name in REALM_HANDHELD else "minecraft:item/generated",
+                                        "textures": {"layer0": f"{M}:item/{name}"}})
+    w(f"{A}/items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{M}:item/{name}"}})
+for v in ("elven_blade", "elven_blade_glowing"):
+    w(f"{A}/models/item/{v}.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{M}:item/{v}"}})
+w(f"{A}/items/elven_blade.json", {"model": {"type": "minecraft:condition", "property": "minecraft:has_component", "component": f"{M}:warning",
+    "on_true": {"type": "minecraft:model", "model": f"{M}:item/elven_blade_glowing"},
+    "on_false": {"type": "minecraft:model", "model": f"{M}:item/elven_blade"}}})
+# lamp-post: iron post + glowing lantern head with a snow cap
+def el(fr, to, tex, emit=None):
+    e = {"from": fr, "to": to, "faces": {d: {"texture": tex} for d in ("north", "south", "east", "west", "up", "down")}}
+    if emit: e["light_emission"] = emit
+    return e
+w(f"{A}/blockstates/lamp_post.json", {"variants": {"": {"model": f"{M}:block/lamp_post"}}})
+w(f"{A}/models/block/lamp_post.json", {"parent": "minecraft:block/block", "ambientocclusion": False,
+    "textures": {"particle": f"{M}:block/lamp_post_iron", "iron": f"{M}:block/lamp_post_iron", "glass": f"{M}:block/lamp_post_glass", "snow": f"{M}:block/lamp_post_snow"},
+    "elements": [el([6.5, 0, 6.5], [9.5, 11, 9.5], "#iron"), el([5, 0, 5], [11, 1.5, 11], "#iron"),
+                 el([4.5, 11, 4.5], [11.5, 12, 11.5], "#iron"), el([5, 12, 5], [11, 15, 11], "#glass", 15),
+                 el([4, 15, 4], [12, 16, 12], "#iron"), el([4.5, 15.6, 4.5], [11.5, 16, 11.5], "#snow")]})
+w(f"{A}/items/lamp_post.json", {"model": {"type": "minecraft:model", "model": f"{M}:block/lamp_post"}})
+w(f"{D}/loot_table/blocks/lamp_post.json", self_loot("lamp_post"))
+w(f"{A}/equipment/mithril.json", {"layers": {"humanoid": [{"texture": f"{M}:mithril"}]}})
+
+realm_lang = {
+    "item.hydemod.turkish_delight": "Turkish Delight",
+    "item.hydemod.healing_cordial": "Healing Cordial",
+    "item.hydemod.stone_spell_wand": "Stone-Spell Wand",
+    "item.hydemod.wizard_wand": "Wizard's Wand",
+    "item.hydemod.invisibility_cloak": "Invisibility Cloak",
+    "item.hydemod.flying_broom": "Flying Broom",
+    "item.hydemod.butterscotch_brew": "Butterscotch Brew",
+    "item.hydemod.power_mushroom": "Power Mushroom",
+    "item.hydemod.blaze_blossom": "Blaze Blossom",
+    "item.hydemod.invincibility_star": "Invincibility Star",
+    "item.hydemod.heart_vessel": "Heart Vessel",
+    "item.hydemod.grappling_hook": "Grappling Hook",
+    "item.hydemod.bomb": "Bomb",
+    "item.hydemod.ocarina": "Ocarina of Day and Night",
+    "item.hydemod.ring_of_unseeing": "Ring of Unseeing",
+    "item.hydemod.elven_blade": "Elven Blade",
+    "item.hydemod.mithril_mail": "Mithril Mail",
+    "item.hydemod.elven_waybread": "Elven Waybread",
+    "item.hydemod.star_phial": "Star Phial",
+    "block.hydemod.lamp_post": "Snowy Lamp-Post",
+    "entity.hydemod.thrown_bomb": "Bomb",
+    "effect.hydemod.super_size": "Super Size",
+    "effect.hydemod.star_power": "Star Power",
+    "tooltip.hydemod.turkish_delight": "Enchanted sweets from a land of endless winter. Once you start...",
+    "tooltip.hydemod.healing_cordial": "One drop heals any wound. Use on yourself, or right-click another creature.",
+    "tooltip.hydemod.stone_spell_wand": "The Winter Witch's wand: turns a creature to stone and freezes the water around it.",
+    "tooltip.hydemod.wizard_wand": "Sneak + use to change spell. Use to cast.",
+    "tooltip.hydemod.spell": "Spell: %s",
+    "spell.hydemod.stun": "Stunning Bolt",
+    "spell.hydemod.light": "Wand-Light",
+    "spell.hydemod.disarm": "Disarm",
+    "spell.hydemod.levitate": "Levitate",
+    "tooltip.hydemod.invisibility_cloak": "Throw it over yourself to vanish for a minute.",
+    "tooltip.hydemod.flying_broom": "Hold right-click to fly where you look.",
+    "tooltip.hydemod.butterscotch_brew": "Warm, frothy and sweet. Warms you right through.",
+    "tooltip.hydemod.power_mushroom": "Makes you grow huge for a minute: more health, more reach.",
+    "tooltip.hydemod.blaze_blossom": "A flower that throws fireballs.",
+    "tooltip.hydemod.invincibility_star": "Twelve seconds of invincibility. Anything hostile you touch goes flying.",
+    "tooltip.hydemod.heart_vessel": "Permanently adds one heart (up to ten extra).",
+    "tooltip.hydemod.grappling_hook": "Fires a chain at a block and yanks you to it.",
+    "tooltip.hydemod.bomb": "Light it and throw it. Bounces once, then BOOM.",
+    "tooltip.hydemod.ocarina": "Play the tune to swap day and night.",
+    "tooltip.hydemod.ring_of_unseeing": "Hold it to vanish from sight and slip away from monsters. It gnaws at you.",
+    "tooltip.hydemod.elven_blade": "Glows blue when monsters are near.",
+    "tooltip.hydemod.mithril_mail": "Light as a feather, hard as dragon scales.",
+    "tooltip.hydemod.elven_waybread": "One bite fills a grown man's stomach.",
+    "tooltip.hydemod.star_phial": "A light for dark places. Blinds and scatters nearby monsters.",
+    "message.hydemod.heart_vessel": "Your heart grows stronger! (+%s extra hearts)",
+    "message.hydemod.heart_vessel.max": "Your heart can't grow any stronger.",
+    "message.hydemod.ocarina.day": "The sun rises to your tune.",
+    "message.hydemod.ocarina.night": "Night falls to your tune.",
+    "call.hydemod.elephant_mario.name": "Elephant Mario",
+    "call.hydemod.elephant_mario.calling": "incoming call",
+}
+lang_path = f"{A}/lang/en_us.json"
+L = json.load(open(lang_path)); L.update(realm_lang); w(lang_path, L)
+
+shapeless("turkish_delight", ["minecraft:sugar", "minecraft:sugar", "minecraft:sweet_berries", "minecraft:snowball"], f"{M}:turkish_delight", 4)
+shaped("healing_cordial", [" G ", "GRG", " G "], {"G": "minecraft:gold_nugget", "R": "minecraft:glistering_melon_slice"}, f"{M}:healing_cordial")
+shaped("stone_spell_wand", ["  I", " S ", "S  "], {"I": "minecraft:blue_ice", "S": "minecraft:stick"}, f"{M}:stone_spell_wand", cat="equipment")
+shaped("wizard_wand", ["  F", " S ", "S  "], {"F": "minecraft:feather", "S": "minecraft:blaze_rod"}, f"{M}:wizard_wand", cat="equipment")
+shaped("invisibility_cloak", ["WPW", "WGW", "WWW"], {"W": "minecraft:white_wool", "P": "minecraft:phantom_membrane", "G": "minecraft:glass"}, f"{M}:invisibility_cloak", cat="equipment")
+shaped("flying_broom", ["  S", " S ", "W  "], {"S": "minecraft:stick", "W": "minecraft:wheat"}, f"{M}:flying_broom", cat="equipment")
+shaped("flying_broom_feather", ["  S", " S ", "WF "], {"S": "minecraft:stick", "W": "minecraft:wheat", "F": "minecraft:feather"}, f"{M}:flying_broom", cat="equipment")
+shapeless("butterscotch_brew", ["minecraft:glass_bottle", "minecraft:sugar", "minecraft:milk_bucket", "minecraft:honey_bottle"], f"{M}:butterscotch_brew")
+shapeless("power_mushroom", ["minecraft:red_mushroom", "minecraft:glowstone_dust", "minecraft:golden_carrot"], f"{M}:power_mushroom")
+shaped("blaze_blossom", [" B ", " P ", " S "], {"B": "minecraft:blaze_powder", "P": "minecraft:poppy", "S": "minecraft:stick"}, f"{M}:blaze_blossom", cat="equipment")
+shaped("invincibility_star", ["GNG", "NSN", "GNG"], {"G": "minecraft:glowstone_dust", "N": "minecraft:gold_nugget", "S": "minecraft:nether_star"}, f"{M}:invincibility_star", 4)
+shaped("heart_vessel", ["GDG", "DAD", "GDG"], {"G": "minecraft:gold_ingot", "D": "minecraft:diamond", "A": "minecraft:enchanted_golden_apple"}, f"{M}:heart_vessel")
+shaped("grappling_hook", [" II", " CI", "C  "], {"I": "minecraft:iron_ingot", "C": "minecraft:iron_chain"}, f"{M}:grappling_hook", cat="equipment")
+shapeless("bomb", ["minecraft:gunpowder", "minecraft:gunpowder", "minecraft:iron_nugget", "minecraft:string"], f"{M}:bomb", 2)
+shaped("ocarina", [" C ", "CNC", " C "], {"C": "minecraft:clay_ball", "N": "minecraft:note_block"}, f"{M}:ocarina")
+shaped("ring_of_unseeing", [" G ", "GEG", " G "], {"G": "minecraft:gold_ingot", "E": "minecraft:ender_eye"}, f"{M}:ring_of_unseeing")
+shaped("elven_blade", [" D ", " L ", " S "], {"D": "minecraft:diamond", "L": "minecraft:lapis_block", "S": "minecraft:stick"}, f"{M}:elven_blade", cat="equipment")
+shaped("mithril_mail", ["N N", "NDN", "NNN"], {"N": "minecraft:iron_nugget", "D": "minecraft:diamond_block"}, f"{M}:mithril_mail", cat="equipment")
+shapeless("elven_waybread", ["minecraft:bread", "minecraft:honey_bottle", "minecraft:oak_leaves", "minecraft:golden_apple"], f"{M}:elven_waybread", 3)
+shaped("star_phial", [" G ", "GLG", " G "], {"G": "minecraft:glass", "L": "minecraft:sea_lantern"}, f"{M}:star_phial")
+shaped("lamp_post", ["III", " L ", " I "], {"I": "minecraft:iron_bars", "L": "minecraft:lantern"}, f"{M}:lamp_post", cat="building")
+tag("hydemod/tags/item/repairs_mithril", ["minecraft:diamond"])
+
+# ================================================================== retro RPG homage items
+RETRO_SIMPLE = ["reflector_badge", "healing_butterfly", "flip_charm", "moment_stopwatch", "chrono_pendant"]
+RETRO_HANDHELD = ["slugger_bat", "spin_hammer"]
+for name in RETRO_SIMPLE + RETRO_HANDHELD:
+    w(f"{A}/models/item/{name}.json", {"parent": "minecraft:item/handheld" if name in RETRO_HANDHELD else "minecraft:item/generated",
+                                        "textures": {"layer0": f"{M}:item/{name}"}})
+    w(f"{A}/items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{M}:item/{name}"}})
+L = json.load(open(lang_path)); L.update({
+    "item.hydemod.slugger_bat": "Slugger Bat",
+    "item.hydemod.reflector_badge": "Reflector Badge",
+    "item.hydemod.healing_butterfly": "Healing Butterfly",
+    "item.hydemod.spin_hammer": "Spin Hammer",
+    "item.hydemod.flip_charm": "Flip Charm",
+    "item.hydemod.moment_stopwatch": "Moment Stopwatch",
+    "item.hydemod.chrono_pendant": "Chrono Pendant",
+    "tooltip.hydemod.slugger_bat": "A trusty baseball bat. Sometimes you hit a home run. SMAAAASH!",
+    "tooltip.hydemod.reflector_badge": "Keep it anywhere in your inventory: half of projectile damage bounces back at the shooter.",
+    "tooltip.hydemod.healing_butterfly": "Let it go: heals you fully and shakes off poison and weakness.",
+    "tooltip.hydemod.spin_hammer": "Slam the ground: a shockwave flips everything nearby into the air.",
+    "tooltip.hydemod.flip_charm": "Flip between dimensions to slip through up to 3 blocks of wall.",
+    "tooltip.hydemod.moment_stopwatch": "Stops time for everything around you for five seconds.",
+    "tooltip.hydemod.chrono_pendant": "Keep it with you: a fatal blow rewinds you 10 seconds instead (once every 5 minutes).",
+    "message.hydemod.smash": "SMAAAASH!!",
+    "message.hydemod.flip.blocked": "There's nowhere to flip to.",
+    "message.hydemod.chrono_rewind": "Time rewinds... you get a second chance.",
+}); w(lang_path, L)
+shaped("slugger_bat", ["  P", " P ", "S  "], {"P": "minecraft:oak_planks", "S": "minecraft:string"}, f"{M}:slugger_bat", cat="equipment")
+shaped("reflector_badge", [" G ", "GLG", " G "], {"G": "minecraft:gold_ingot", "L": "minecraft:lightning_rod"}, f"{M}:reflector_badge")
+shapeless("healing_butterfly", ["minecraft:glass_bottle", "minecraft:pink_petals", "minecraft:glistering_melon_slice"], f"{M}:healing_butterfly")
+shaped("spin_hammer", ["III", "ISI", " S "], {"I": "minecraft:iron_block", "S": "minecraft:stick"}, f"{M}:spin_hammer", cat="equipment")
+shaped("flip_charm", [" A ", "AEA", " A "], {"A": "minecraft:amethyst_shard", "E": "minecraft:ender_pearl"}, f"{M}:flip_charm")
+shaped("moment_stopwatch", [" G ", "GCG", " G "], {"G": "minecraft:gold_ingot", "C": "minecraft:clock"}, f"{M}:moment_stopwatch")
+shaped("chrono_pendant", [" S ", "SDS", " T "], {"S": "minecraft:string", "D": "minecraft:diamond", "T": "minecraft:totem_of_undying"}, f"{M}:chrono_pendant")
 
 print("data written")

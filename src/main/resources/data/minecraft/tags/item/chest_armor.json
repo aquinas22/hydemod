@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "hydemod:hyde_chestplate"
+    "hydemod:hyde_chestplate",
+    "hydemod:mithril_mail"
   ]
 }

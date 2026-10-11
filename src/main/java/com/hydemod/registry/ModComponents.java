@@ -22,6 +22,12 @@ public final class ModComponents {
     /** Blade extension 1-4 while igniting/retracting (4 = fully lit); absent when off. Drives the item model. */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> BLADE = COMPONENTS.registerComponentType("blade",
             b -> b.persistent(Codec.intRange(1, 4)).networkSynchronized(ByteBufCodecs.VAR_INT));
+    /** Selected Wizard's Wand spell. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SPELL = COMPONENTS.registerComponentType("spell",
+            b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    /** Present while an Elven Blade senses monsters nearby; switches it to its glowing model. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WARNING = COMPONENTS.registerComponentType("warning",
+            b -> b.persistent(Unit.CODEC).networkSynchronized(Unit.STREAM_CODEC));
     /** First warp pipe selected with the pipe wrench. */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>> PIPE_LINK = COMPONENTS.registerComponentType("pipe_link",
             b -> b.persistent(GlobalPos.CODEC).networkSynchronized(GlobalPos.STREAM_CODEC));

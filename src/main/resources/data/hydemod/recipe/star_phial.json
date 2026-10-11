@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " G ",
+    "GLG",
+    " G "
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "L": "minecraft:sea_lantern"
+  },
+  "result": {
+    "id": "hydemod:star_phial",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " G ",
+    "GLG",
+    " G "
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "L": "minecraft:lightning_rod"
+  },
+  "result": {
+    "id": "hydemod:reflector_badge",
+    "count": 1
+  }
+}

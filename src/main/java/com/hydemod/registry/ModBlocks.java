@@ -45,5 +45,9 @@ public final class ModBlocks {
     public static final DeferredBlock<ChargingStationBlock> CHARGING_STATION = BLOCKS.registerBlock("charging_station", ChargingStationBlock::new,
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.5F, 6.0F).sound(SoundType.METAL).lightLevel(s -> 4));
 
+    /** A snowy old lamp-post that never goes out. */
+    public static final DeferredBlock<com.hydemod.block.LampPostBlock> LAMP_POST = BLOCKS.registerBlock("lamp_post", com.hydemod.block.LampPostBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0F, 6.0F).sound(SoundType.LANTERN).lightLevel(s -> 15).noOcclusion());
+
     private ModBlocks() {}
 }

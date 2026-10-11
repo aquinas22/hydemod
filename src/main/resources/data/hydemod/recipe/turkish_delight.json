@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:sugar",
+    "minecraft:sugar",
+    "minecraft:sweet_berries",
+    "minecraft:snowball"
+  ],
+  "result": {
+    "id": "hydemod:turkish_delight",
+    "count": 4
+  }
+}

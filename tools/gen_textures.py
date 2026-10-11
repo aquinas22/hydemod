@@ -1489,6 +1489,230 @@ def main_v11():
         pth = os.path.join(ROOT, old)
         if os.path.exists(pth): os.remove(pth)
 
+# ================================================================== realm items (original pixel art)
+def icon(rows, pal, outline_col=(20, 20, 26, 255)):
+    img = new()
+    pal = dict(pal); pal["."] = None
+    draw_rows(img, rows, pal)
+    return outline(img, outline_col)
+
+def realm_icons():
+    out = {}
+    out["turkish_delight"] = icon([
+        "................", "................", "................", "....pppp........", "...pPPPPp.pppp..",
+        "...pPWPPppPPPPp.", "...pPPPPppPWPPp.", "...pppppppPPPPp.", "....pppp.pppppp.", "...ssss..pppp...",
+        "..sPPPPs........", "..sPWPPPs.......", "..sPPPPPs.......", "..sssssss.......", "................", "................"],
+        {"p": hexc("e8a6c8"), "P": hexc("f4c6dc"), "W": hexc("ffffff"), "s": hexc("d48ab0")})
+    out["healing_cordial"] = icon([
+        "................", ".......gg.......", "......gGGg......", ".......cc.......", "......cCCc......",
+        ".....cDDDDc.....", "....cDRRRRDc....", "....cDRWRRDc....", "....cDRRRRDc....", "....cDRRRRDc....",
+        ".....cDRRDc.....", "......cccc......", "................", "................", "................", "................"],
+        {"g": hexc("c8a040"), "G": hexc("ffe07a"), "c": hexc("e8e2d0"), "C": hexc("ffffff"), "D": hexc("c9c2a8"),
+         "R": hexc("e2353a"), "W": hexc("ffb0b0")})
+    out["stone_spell_wand"] = icon([
+        "..............w.", ".............wWw", "..............w.", ".............i..", "............i...",
+        "...........I....", "..........i.....", ".........I......", "........i.......", ".......I........",
+        "......i.........", ".....I..........", "....i...........", "...I............", "..i.............", "................"],
+        {"w": hexc("bfe8ff"), "W": hexc("ffffff"), "i": hexc("dfe7ef"), "I": hexc("9aa8b8")})
+    out["wizard_wand"] = icon([
+        "................", ".............y..", "............yYy.", "............h...", "...........h....",
+        "..........H.....", ".........h......", "........H.......", ".......h........", "......H.........",
+        ".....b..........", "....bB..........", "...bB...........", "..bb............", "................", "................"],
+        {"y": hexc("ffd84a"), "Y": hexc("ffffff"), "h": hexc("7a4a26"), "H": hexc("5c3519"), "b": hexc("3a2412"), "B": hexc("8a5a34")})
+    out["invisibility_cloak"] = icon([
+        "................", "......sss.......", ".....sSSSs......", "....sSaaaSs.....", "...sSaaaaaSs....",
+        "...sSaaaaaSs....", "..sSaaAaaaaSs...", "..sSaaaaAaaSs...", "..sSaaaaaaaSs...", ".sSaaAaaaaaaSs..",
+        ".sSaaaaaaAaaSs..", ".sSaaaaaaaaaSs..", ".ssSSSSSSSSSss..", "................", "................", "................"],
+        {"s": hexc("6a7a8a", 160), "S": hexc("9aaaba", 150), "a": hexc("c8d6e6", 120), "A": hexc("ffffff", 200)}, (40, 50, 60, 140))
+    out["flying_broom"] = icon([
+        "..............h.", ".............h..", "............h...", "...........h....", "..........H.....",
+        ".........h......", "........H.......", ".......h........", "......rr........", ".....tTtT.......",
+        "....tTtTt.......", "...tTtTtT.......", "..tTtTtT........", "..TtTt..........", "................", "................"],
+        {"h": hexc("8a5a34"), "H": hexc("6a4022"), "r": hexc("c0392b"), "t": hexc("d9b25a"), "T": hexc("b08a3a")})
+    out["butterscotch_brew"] = bottle(hexc("d98e2a"), hexc("8a5a2b"))
+    out["power_mushroom"] = icon([  # a giant golden glowcap: amber cap, glowing freckles, pale gills
+        "................", "......aaaa......", "....aAAAAAAa....", "...aAAgAAAAAa...", "..aAAAAAAgAAAa..",
+        "..aAgAAAAAAAAa..", ".aAAAAAAgAAAAAa.", ".aAAAgAAAAAAgAa.", ".ddddddddddddddd", "..llllllllllll..",
+        ".....sssss......", ".....sSsss......", ".....sssSs......", ".....sssss......", "....sssssss.....", "................"],
+        {"a": hexc("c8741a"), "A": hexc("f0a030"), "g": hexc("fff6a0"), "d": hexc("8a4a12"), "l": hexc("f4e2c4"), "s": hexc("e8dcc0"), "S": hexc("c8b890")})
+    out["blaze_blossom"] = icon([  # a tulip whose petals are tongues of flame
+        "......f..f......", ".....fF.fFf.....", "....fFYfFYFf....", "....fYYYYYYf....", "....FYWWWWYF....",
+        "....FYWWWWYF....", ".....FYYYYF.....", "......FFFF......", ".......g........", ".......g..l.....",
+        "......lg.ll.....", ".....ll.gl......", "........g.......", ".......g........", ".......g........", "................"],
+        {"f": hexc("c0301a"), "F": hexc("ff6a1a"), "Y": hexc("ffb020"), "W": hexc("fff2a0"), "g": hexc("2a7a3a"), "l": hexc("4aa84a")})
+    out["invincibility_star"] = icon([  # a faceted rainbow crystal star
+        ".......r........", "......rOr.......", "......oYo.......", ".....oYGYo......", "rrooyYGWGYyoorr.",
+        ".rOYYGGWWGGYYr..", "..oYGBWWWBGYo...", "...yGBBWBBGy....", "...yGBPPPBGy....", "..yGBPy.yPBGy...",
+        "..yGPy...yPGy...", ".yGPy.....yPGy..", ".yy.........yy..", "................", "................", "................"],
+        {"r": hexc("e83a3a"), "O": hexc("ff8a2a"), "o": hexc("ffa030"), "y": hexc("e8c810"), "Y": hexc("ffe040"),
+         "G": hexc("50e070"), "B": hexc("40a8ff"), "P": hexc("b060ff"), "W": hexc("ffffff")})
+    out["heart_vessel"] = icon([
+        "................", "................", "..rrr....rrr....", ".rRRRr..rRRRr...", "rRWWRRrrRRRRRr..",
+        "rRWRRRRRRRRRRr..", "rRRRRRRRRRRRRr..", ".rRRRRRRRRRRr...", "..rRRRRRRRRr....", "...rRRRRRRr.....",
+        "....rRRRRr......", ".....rRRr.......", "......rr........", "................", "................", "................"],
+        {"r": hexc("a01818"), "R": hexc("e82a3a"), "W": hexc("ffc0c8")}, (60, 10, 10, 255))
+    out["grappling_hook"] = icon([
+        "................", ".....m...m......", ".....mM.Mm......", "......mMm.......", ".......m........",
+        ".......c........", "......c.........", ".......c........", "........c.......", ".......c........",
+        "......bbbb......", ".....bBBBBb.....", ".....bBBBBb.....", "......bbbb......", "................", "................"],
+        {"m": hexc("c8ccd4"), "M": hexc("8a8f99"), "c": hexc("6c7480"), "b": hexc("7a4a26"), "B": hexc("a8763a")})
+    out["bomb"] = icon([
+        "................", "..........s.....", ".........s.f....", "........ss..f...", ".......ww.......",
+        ".....bbbbbb.....", "....bBBbbbbb....", "...bBWBbbbbbb...", "...bBBbbbbbbb...", "...bbbbbbbbbb...",
+        "...bbbbbbbbbb...", "....bbbbbbbb....", ".....bbbbbb.....", "................", "................", "................"],
+        {"s": hexc("d9b25a"), "f": hexc("ffa030"), "w": hexc("6c7480"), "b": hexc("2a3a8a"), "B": hexc("5a70d8"), "W": hexc("c8d4ff")})
+    out["ocarina"] = icon([  # a classic terracotta clay ocarina
+        "................", "................", "................", "....bbbbbb......", "..bbBBBBBBbb....",
+        ".bBBhBBhBBBBbb..", ".bBBBBBBBBBBBBb.", ".bBBhBBhBBBBBBpp", "..bbBBBBBBBBbbpp", "....bbbbbbbb....",
+        "................", "................", "................", "................", "................", "................"],
+        {"b": hexc("8a4a2a"), "B": hexc("c8743a"), "h": hexc("3a1a0a"), "p": hexc("e8c8a0")})
+    out["ring_of_unseeing"] = icon([
+        "................", "................", "................", "......gggg......", "....gGGGGGGg....",
+        "...gGg....gGg...", "..gGg......gGg..", "..gG........Gg..", "..gG........Gg..", "..gGg......gGg..",
+        "...gGg....gGg...", "....gGGGGGGg....", "......gggg......", "................", "................", "................"],
+        {"g": hexc("b8860b"), "G": hexc("ffd84a")}, (60, 40, 0, 255))
+    blade = [
+        "..............wW", ".............wWw", "............wWw.", "...........wWw..", "..........wWw...",
+        ".........wWw....", "........wWw.....", ".......wWw......", "..g...wWw.......", "..gg.wWw........",
+        "...gggW.........", "....hgg.........", "...hHh.g........", "..hHh...........", ".pp.............", ".p.............."]
+    out["elven_blade"] = icon(blade, {"w": hexc("aab4c0"), "W": hexc("eef2f6"), "g": hexc("c8a040"), "h": hexc("3a5a3a"), "H": hexc("5a8a5a"), "p": hexc("c8a040")})
+    out["elven_blade_glowing"] = icon(blade, {"w": hexc("4aa8ff"), "W": hexc("d8f0ff"), "g": hexc("c8a040"), "h": hexc("3a5a3a"), "H": hexc("5a8a5a"), "p": hexc("c8a040")}, (10, 40, 90, 255))
+    out["mithril_mail"] = icon([
+        "................", "..mmm......mmm..", "..mMMm....mMMm..", "..mMMMmmmmMMMm..", "...mMWMMMMMWMm..",
+        "....mMMMMMMMm...", "....mMWMMMWMm...", "....mMMMMMMMm...", "....mMMWMWMMm...", "....mMMMMMMMm...",
+        "....mMWMMMWMm...", "....mmmmmmmmm...", "................", "................", "................", "................"],
+        {"m": hexc("8a96a8"), "M": hexc("d8e2ee"), "W": hexc("ffffff")})
+    out["elven_waybread"] = icon([
+        "................", "................", "...lllllllll....", "..lLLLLLLLLLl...", "..lLccccccLLl...",
+        "..lLcCCCCCcLl...", "..lLcCCCCCcLl...", "..lLcCCCCCcLl...", "..lLccccccLLl...", "..lLLLLLLLLLl...",
+        "...lllllllll....", "................", "................", "................", "................", "................"],
+        {"l": hexc("3a7a3a"), "L": hexc("5aa05a"), "c": hexc("e0c890"), "C": hexc("f4e2b8")})
+    out["star_phial"] = icon([
+        "................", ".......gg.......", "......gGGg......", ".......ss.......", "......sWWs......",
+        ".....sWLLWs.....", "....sWLLLLWs....", "....sLLWWLLs....", "....sLLWWLLs....", "....sWLLLLWs....",
+        ".....sWLLWs.....", "......ssss......", "................", "................", "................", "................"],
+        {"g": hexc("c8a040"), "G": hexc("ffe07a"), "s": hexc("9ad0ff"), "W": hexc("ffffff"), "L": hexc("d8f0ff")})
+    return out
+
+def lamp_post_tex():
+    post = new(); noise_fill(post, (0, 0, 16, 16), hexc("2a2c31"), 0.08, 51)
+    for y in range(0, 16, 4):
+        for x in range(16): post.putpixel((x, y), hexc("3a3d44"))
+    glass = new()
+    for y in range(16):
+        for x in range(16):
+            edge = x in (0, 15) or y in (0, 15)
+            glass.putpixel((x, y), hexc("1d1f24") if edge else mix(hexc("ffe9a0"), hexc("fff8e0"), (y % 4) / 4))
+    snow = new(); noise_fill(snow, (0, 0, 16, 16), hexc("f4f8fc"), 0.04, 52)
+    return post, glass, snow
+
+def mithril_layer():
+    img = new(64, 32)
+    base = hexc("c8d2de"); dk = hexc("8a96a8"); hi = hexc("f4f8ff")
+    def mail(img, x0, y0, w, h):
+        for y in range(y0, y0 + h):
+            for x in range(x0, x0 + w):
+                gx, gy = x - x0, y - y0
+                ring = (gx + (gy % 2)) % 2 == 0
+                img.putpixel((x, y), hi if ring and gy % 3 == 0 else (base if ring else dk))
+    box_uv(img, 16, 16, 8, 12, 4, {"default": mail})
+    box_uv(img, 40, 16, 4, 12, 4, {"default": lambda i, a, b, c, d: mail(i, a, b, c, min(d, 6))})
+    return img
+
+def effect_icons():
+    big = new(18, 18)
+    for y in range(18):
+        for x in range(18):
+            if (x - 8.5) ** 2 / 64 + (y - 9) ** 2 / 49 < 1 and y < 10: big.putpixel((x, y), hexc("e0322e"))
+            if 6 <= x <= 11 and 9 <= y <= 15: big.putpixel((x, y), hexc("f2e2c4"))
+    for (x, y) in ((5, 4), (6, 4), (11, 3), (12, 4)): big.putpixel((x, y), hexc("fff4e8"))
+    star = new(18, 18)
+    pts = [(9 + 8 * math.cos(math.pi / 2 + k * math.pi / 5) * (1 if k % 2 == 0 else 0.45),
+            9 - 8 * math.sin(math.pi / 2 + k * math.pi / 5) * (1 if k % 2 == 0 else 0.45)) for k in range(10)]
+    from PIL import ImageDraw
+    ImageDraw.Draw(star).polygon(pts, fill=hexc("ffe040"), outline=hexc("e8a810"))
+    return big, star
+
+def call_portrait():
+    """64x64 portrait of HydeMod's own Elephant Mario: red star cap, big eyes, rosy cheeks, curly trunk."""
+    img = Image.new("RGBA", (64, 64), hexc("4a9ad8"))
+    from PIL import ImageDraw
+    d = ImageDraw.Draw(img)
+    for y in range(64):  # sky gradient background
+        d.line([(0, y), (63, y)], fill=mix(hexc("8fd0ff"), hexc("3a7ac8"), y / 63))
+    skin = hexc("a9b4c8"); skin_dk = hexc("8591a8"); pink = hexc("f2a7b8")
+    d.ellipse([2, 18, 20, 44], fill=skin, outline=skin_dk); d.ellipse([6, 22, 17, 40], fill=pink)       # ears
+    d.ellipse([44, 18, 62, 44], fill=skin, outline=skin_dk); d.ellipse([47, 22, 58, 40], fill=pink)
+    d.ellipse([12, 14, 52, 58], fill=skin, outline=skin_dk)                                          # head
+    d.rectangle([12, 10, 52, 20], fill=hexc("d8322f")); d.rectangle([10, 19, 54, 22], fill=hexc("a8221f"))  # red cap + brim
+    d.polygon([(32, 11), (34, 15), (38, 15), (35, 17), (36, 20), (32, 18), (28, 20), (29, 17), (26, 15), (30, 15)], fill=hexc("ffd23a"))
+    for ex in (20, 36):                                                                              # big eyes + heavy brows
+        d.ellipse([ex, 25, ex + 9, 36], fill=hexc("ffffff"), outline=hexc("3a3f4f"))
+        d.ellipse([ex + 3, 28, ex + 8, 35], fill=hexc("2b6fd6")); d.rectangle([ex + 5, 30, ex + 6, 33], fill=hexc("15151c"))
+        d.point((ex + 4, 29), fill=hexc("ffffff"))
+    d.line([(19, 23), (29, 25)], fill=hexc("3a3f4f"), width=2); d.line([(35, 25), (45, 23)], fill=hexc("3a3f4f"), width=2)
+    d.ellipse([16, 38, 22, 42], fill=pink); d.ellipse([42, 38, 48, 42], fill=pink)                    # cheeks
+    trunk = [(32, 36), (31, 44), (30, 50), (33, 56), (39, 58), (43, 55), (41, 52)]                 # curly trunk
+    d.line(trunk, fill=skin_dk, width=8); d.line(trunk, fill=skin, width=6)
+    d.ellipse([38, 50, 45, 56], fill=skin, outline=skin_dk); d.point((41, 53), fill=pink)
+    d.arc([22, 42, 30, 50], 20, 160, fill=hexc("6a3a3a"), width=1)                                  # smile peeking out
+    return img
+
+def main_realm():
+    for name, im in realm_icons().items():
+        save(im, f"item/{name}.png")
+    post, glass, snow = lamp_post_tex()
+    save(post, "block/lamp_post_iron.png"); save(glass, "block/lamp_post_glass.png"); save(snow, "block/lamp_post_snow.png")
+    save(mithril_layer(), "entity/equipment/humanoid/mithril.png")
+    big, star = effect_icons()
+    save(big, "mob_effect/super_size.png"); save(star, "mob_effect/star_power.png")
+    save(call_portrait(), "gui/elephant_mario_call.png")
+
+def retro_icons():
+    out = {}
+    out["slugger_bat"] = icon([
+        "..............bb", ".............bBb", "............bBb.", "...........bBb..", "..........bBb...",
+        ".........bBb....", "........bBb.....", ".......bBb......", "......bBb.......", ".....bBb........",
+        "....tTb.........", "...tTt..........", "..tTt...........", ".kk.............", ".k..............", "................"],
+        {"b": hexc("b8864a"), "B": hexc("e0b070"), "t": hexc("2a2a2a"), "T": hexc("5a5a5a"), "k": hexc("8a5a2a")})
+    out["reflector_badge"] = icon([
+        "................", "................", "......yyyy......", "....yYYYYYYy....", "...yYYlYYYYYy...",
+        "...yYlYYYYYYy...", "..yYYlllYYYYYy..", "..yYYYYlYYYYYy..", "..yYYYlYYYYYYy..", "...yYlYYYYYYy...",
+        "...yYYYYYYYYy...", "....yYYYYYYy....", "......yyyy......", "................", "................", "................"],
+        {"y": hexc("b8860b"), "Y": hexc("ffd84a"), "l": hexc("fff6c0")})
+    out["healing_butterfly"] = icon([
+        "................", "......gggg......", ".....g....g.....", "....g......g....", "....gpp..ppg....",
+        "....gpPbbPpg....", "....gpPbbPpg....", "....g.ppPp.g....", "....g.p..p.g....", "....g......g....",
+        "....g......g....", ".....gggggg.....", "......cccc......", "................", "................", "................"],
+        {"g": hexc("cfe8ff", 170), "p": hexc("ff8ad8"), "P": hexc("ffd0f0"), "b": hexc("3a2a4a"), "c": hexc("8a5a2a")}, (60, 70, 90, 200))
+    out["spin_hammer"] = icon([
+        "................", "...hhhhhh.......", "..hHHHHHHh......", "..hHHyyHHh......", "..hHHHHHHh......",
+        "...hhhhhh.......", ".....ww.........", ".....w..........", "......w.........", ".......w........",
+        "........w.......", ".........w......", "..........w.....", "...........ww...", "................", "................"],
+        {"h": hexc("4a4a52"), "H": hexc("8a8f99"), "y": hexc("ffd84a"), "w": hexc("8a5a2a")})
+    out["flip_charm"] = icon([
+        "................", ".......c........", "......cCc.......", ".....cCpCc......", "....cCpPpCc.....",
+        "...cCpPWPpCc....", "....cCpPpCc.....", ".....cCpCc......", "......cCc.......", ".......c........",
+        "................", "................", "................", "................", "................", "................"],
+        {"c": hexc("3a2a8a"), "C": hexc("6a4ae0"), "p": hexc("a07aff"), "P": hexc("d0b8ff"), "W": hexc("ffffff")})
+    out["moment_stopwatch"] = icon([
+        "................", ".......bb.......", "......bBBb......", "....ssssssss....", "...sWWWWWWWWs...",
+        "..sWWWWkWWWWWs..", "..sWWWWkWWWWWs..", "..sWWWWkkkWWWs..", "..sWWWWWWWWWWs..", "..sWWWWWWWWWWs..",
+        "...sWWWWWWWWs...", "....ssssssss....", "................", "................", "................", "................"],
+        {"b": hexc("8a8f99"), "B": hexc("c8ccd4"), "s": hexc("8a8f99"), "W": hexc("f4f2ec"), "k": hexc("2a2a2a")})
+    out["chrono_pendant"] = icon([
+        "....c......c....", ".....c....c.....", "......c..c......", ".......cc.......", "......gggg......",
+        ".....gBBBBg.....", "....gBbWBBBg....", "....gBBbBBBg....", "....gBBBbBBg....", "....gBBBBbBg....",
+        ".....gBBBBg.....", "......gggg......", "................", "................", "................", "................"],
+        {"c": hexc("c8a040"), "g": hexc("e8c860"), "B": hexc("2a8ae0"), "b": hexc("8ad0ff"), "W": hexc("ffffff")})
+    return out
+
+def main_retro():
+    for name, im in retro_icons().items():
+        save(im, f"item/{name}.png")
+
 if __name__ == "__main__":
     main()
     main_v11()
+    main_realm()
+    main_retro()

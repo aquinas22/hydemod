@@ -35,6 +35,7 @@ import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
+import com.hydemod.registry.ModEffects;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -148,6 +149,88 @@ public final class ModItems {
     public static final DeferredItem<LightsaberItem> BLUE_LIGHTSABER = lightsaber(KyberColor.BLUE);
     public static final DeferredItem<LightsaberItem> RED_LIGHTSABER = lightsaber(KyberColor.RED);
     public static final DeferredItem<LightsaberItem> PURPLE_LIGHTSABER = lightsaber(KyberColor.PURPLE);
+
+    // ---------------------------------------------------------------- Realm items (homages: wardrobe-winter, wizard school, plumber, hero of time, ring quest)
+    public static final DeferredItem<Item> TURKISH_DELIGHT = ITEMS.registerSimpleItem("turkish_delight",
+            p -> p.food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.2F).alwaysEdible().build(),
+                    Consumables.defaultFood().consumeSeconds(0.6F).onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                            new MobEffectInstance(MobEffects.SPEED, 20 * 15, 1),
+                            new MobEffectInstance(MobEffects.HUNGER, 20 * 25, 1)))).build()));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.HealingCordial> HEALING_CORDIAL = ITEMS.registerItem("healing_cordial",
+            com.hydemod.item.realm.UtilityItems.HealingCordial::new, p -> p.stacksTo(1).durability(8).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.realm.TargetSpellItem> STONE_SPELL_WAND = ITEMS.registerItem("stone_spell_wand",
+            com.hydemod.item.realm.TargetSpellItem::new, p -> p.stacksTo(1).durability(64).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.realm.WizardWandItem> WIZARD_WAND = ITEMS.registerItem("wizard_wand",
+            com.hydemod.item.realm.WizardWandItem::new, p -> p.stacksTo(1).durability(250).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.InvisibilityCloak> INVISIBILITY_CLOAK = ITEMS.registerItem("invisibility_cloak",
+            com.hydemod.item.realm.UtilityItems.InvisibilityCloak::new, p -> p.stacksTo(1).durability(32).rarity(Rarity.EPIC));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.FlyingBroom> FLYING_BROOM = ITEMS.registerItem("flying_broom",
+            com.hydemod.item.realm.UtilityItems.FlyingBroom::new, p -> p.stacksTo(1).durability(600).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> BUTTERSCOTCH_BREW = ITEMS.registerSimpleItem("butterscotch_brew",
+            p -> p.stacksTo(16).usingConvertsTo(Items.GLASS_BOTTLE)
+                    .food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).alwaysEdible().build(),
+                            Consumables.defaultDrink().onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                                    new MobEffectInstance(MobEffects.ABSORPTION, 20 * 120, 1),
+                                    new MobEffectInstance(MobEffects.REGENERATION, 20 * 10, 0),
+                                    new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * 60, 0)))).build()));
+    public static final DeferredItem<Item> POWER_MUSHROOM = ITEMS.registerSimpleItem("power_mushroom",
+            p -> p.rarity(Rarity.RARE).food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.8F).alwaysEdible().build(),
+                    Consumables.defaultFood().consumeSeconds(0.6F).onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                            new MobEffectInstance(ModEffects.SUPER_SIZE, 20 * 60, 0),
+                            new MobEffectInstance(MobEffects.INSTANT_HEALTH, 1, 1)))).build()));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.BlazeBlossom> BLAZE_BLOSSOM = ITEMS.registerItem("blaze_blossom",
+            com.hydemod.item.realm.UtilityItems.BlazeBlossom::new, p -> p.stacksTo(1).durability(64).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> INVINCIBILITY_STAR = ITEMS.registerSimpleItem("invincibility_star",
+            p -> p.rarity(Rarity.EPIC).component(net.minecraft.core.component.DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+                    .food(new FoodProperties.Builder().nutrition(0).saturationModifier(0.0F).alwaysEdible().build(),
+                            Consumables.defaultFood().consumeSeconds(0.4F).sound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.AMETHYST_BLOCK_CHIME)).onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                                    new MobEffectInstance(ModEffects.STAR_POWER, 20 * 12, 0),
+                                    new MobEffectInstance(MobEffects.RESISTANCE, 20 * 12, 4),
+                                    new MobEffectInstance(MobEffects.SPEED, 20 * 12, 2),
+                                    new MobEffectInstance(MobEffects.GLOWING, 20 * 12, 0)))).build()));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.HeartVessel> HEART_VESSEL = ITEMS.registerItem("heart_vessel",
+            com.hydemod.item.realm.UtilityItems.HeartVessel::new, p -> p.stacksTo(16).rarity(Rarity.EPIC));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.GrapplingHook> GRAPPLING_HOOK = ITEMS.registerItem("grappling_hook",
+            com.hydemod.item.realm.UtilityItems.GrapplingHook::new, p -> p.stacksTo(1).durability(200).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.Bomb> BOMB = ITEMS.registerItem("bomb",
+            com.hydemod.item.realm.UtilityItems.Bomb::new, p -> p.stacksTo(16));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.Ocarina> OCARINA = ITEMS.registerItem("ocarina",
+            com.hydemod.item.realm.UtilityItems.Ocarina::new, p -> p.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.RingOfUnseeing> RING_OF_UNSEEING = ITEMS.registerItem("ring_of_unseeing",
+            com.hydemod.item.realm.UtilityItems.RingOfUnseeing::new, p -> p.stacksTo(1).rarity(Rarity.EPIC).fireResistant());
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.ElvenBlade> ELVEN_BLADE = ITEMS.registerItem("elven_blade",
+            com.hydemod.item.realm.UtilityItems.ElvenBlade::new, p -> p.sword(net.minecraft.world.item.ToolMaterial.DIAMOND, 3.0F, -2.2F).rarity(Rarity.RARE));
+    public static final ResourceKey<EquipmentAsset> MITHRIL_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, HydeMod.id("mithril"));
+    public static final TagKey<Item> REPAIRS_MITHRIL = TagKey.create(Registries.ITEM, HydeMod.id("repairs_mithril"));
+    public static final ArmorMaterial MITHRIL_MATERIAL = new ArmorMaterial(45, defense(3, 6, 9, 3, 11), 25, SoundEvents.ARMOR_EQUIP_CHAIN,
+            3.0F, 0.0F, REPAIRS_MITHRIL, MITHRIL_ASSET);
+    public static final DeferredItem<Item> MITHRIL_MAIL = ITEMS.registerSimpleItem("mithril_mail",
+            p -> p.humanoidArmor(MITHRIL_MATERIAL, ArmorType.CHESTPLATE).rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> ELVEN_WAYBREAD = ITEMS.registerSimpleItem("elven_waybread",
+            p -> p.rarity(Rarity.UNCOMMON).food(new FoodProperties.Builder().nutrition(20).saturationModifier(1.0F).build(),
+                    Consumables.defaultFood().consumeSeconds(0.8F).build()));
+    public static final DeferredItem<com.hydemod.item.realm.UtilityItems.StarPhial> STAR_PHIAL = ITEMS.registerItem("star_phial",
+            com.hydemod.item.realm.UtilityItems.StarPhial::new, p -> p.stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<com.hydemod.item.realm.RetroItems.SluggerBat> SLUGGER_BAT = ITEMS.registerItem("slugger_bat",
+            com.hydemod.item.realm.RetroItems.SluggerBat::new, p -> p.sword(net.minecraft.world.item.ToolMaterial.IRON, 4.0F, -2.8F)
+                    .attributes(net.minecraft.world.item.component.ItemAttributeModifiers.builder()
+                            .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, new net.minecraft.world.entity.ai.attributes.AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, 6.0, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                            .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED, new net.minecraft.world.entity.ai.attributes.AttributeModifier(Item.BASE_ATTACK_SPEED_ID, -2.8, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                            .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK, new net.minecraft.world.entity.ai.attributes.AttributeModifier(HydeMod.id("slugger_knockback"), 2.5, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                            .build()).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<com.hydemod.item.realm.RetroItems.ReflectorBadge> REFLECTOR_BADGE = ITEMS.registerItem("reflector_badge",
+            com.hydemod.item.realm.RetroItems.ReflectorBadge::new, p -> p.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.realm.RetroItems.HealingButterfly> HEALING_BUTTERFLY = ITEMS.registerItem("healing_butterfly",
+            com.hydemod.item.realm.RetroItems.HealingButterfly::new, p -> p.stacksTo(16).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.realm.RetroItems.SpinHammer> SPIN_HAMMER = ITEMS.registerItem("spin_hammer",
+            com.hydemod.item.realm.RetroItems.SpinHammer::new, p -> p.stacksTo(1).durability(300).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<com.hydemod.item.realm.RetroItems.FlipCharm> FLIP_CHARM = ITEMS.registerItem("flip_charm",
+            com.hydemod.item.realm.RetroItems.FlipCharm::new, p -> p.stacksTo(1).durability(100).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.realm.RetroItems.MomentStopwatch> MOMENT_STOPWATCH = ITEMS.registerItem("moment_stopwatch",
+            com.hydemod.item.realm.RetroItems.MomentStopwatch::new, p -> p.stacksTo(1).durability(20).rarity(Rarity.EPIC));
+    public static final DeferredItem<com.hydemod.item.realm.RetroItems.ChronoPendant> CHRONO_PENDANT = ITEMS.registerItem("chrono_pendant",
+            com.hydemod.item.realm.RetroItems.ChronoPendant::new, p -> p.stacksTo(1).rarity(Rarity.EPIC).fireResistant());
+    public static final DeferredItem<BlockItem> LAMP_POST = ITEMS.registerSimpleBlockItem("lamp_post", ModBlocks.LAMP_POST);
 
     // ---------------------------------------------------------------- Block items
     public static final DeferredItem<BlockItem> GREEN_KYBER_ORE = ITEMS.registerSimpleBlockItem("green_kyber_ore", ModBlocks.GREEN_KYBER_ORE);

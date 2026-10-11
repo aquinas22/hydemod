@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " G ",
+    "GRG",
+    " G "
+  ],
+  "key": {
+    "G": "minecraft:gold_nugget",
+    "R": "minecraft:glistering_melon_slice"
+  },
+  "result": {
+    "id": "hydemod:healing_cordial",
+    "count": 1
+  }
+}

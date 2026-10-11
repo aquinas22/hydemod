@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:red_mushroom",
+    "minecraft:glowstone_dust",
+    "minecraft:golden_carrot"
+  ],
+  "result": {
+    "id": "hydemod:power_mushroom",
+    "count": 1
+  }
+}

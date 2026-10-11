@@ -26,5 +26,8 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<TrunkSpray>> TRUNK_SPRAY = ENTITIES.registerEntityType("trunk_spray", TrunkSpray::new, MobCategory.MISC,
             b -> b.noLootTable().sized(0.4F, 0.4F).clientTrackingRange(4).updateInterval(5));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<com.hydemod.entity.ThrownBomb>> THROWN_BOMB = ENTITIES.registerEntityType("thrown_bomb",
+            com.hydemod.entity.ThrownBomb::new, MobCategory.MISC, b -> b.noLootTable().sized(0.4F, 0.4F).clientTrackingRange(6).updateInterval(5));
+
     private ModEntities() {}
 }
