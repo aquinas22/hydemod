@@ -17,7 +17,28 @@ def tri(ph):
     return 4 * p - 1 if p < 0.5 else 3 - 4 * p
 
 def render_song(bpm, bars, bass, lead, arp, drums, lead_wave="square", swing=0.0):
-    """Tracker-style renderer. Patterns are per-16th-step MIDI notes (None = rest, '-' = hold)."""
+    """Renders one seamless loop: the song is rendered one extra bar long, then the loop's opening is
+    replaced by the rendered continuation so the last sample flows exactly into the first, and a
+    DC-blocking filter removes the waveform's offset."""
+    step = 60.0 / bpm / 4
+    loop_n = int(step * bars * 16 * SR)
+    raw = _render(bpm, bars + 1, bass, lead, arp, drums, lead_wave)
+    head = int(0.5 * SR)
+    out = raw[:loop_n]
+    for i in range(head):  # continuation already contains the previous loop's ringing tails
+        k = i / head
+        out[i] = raw[loop_n + i] * (1 - k) + raw[i] * k if i > head // 2 else raw[loop_n + i]
+    # DC blocker (one-pole high-pass at ~10 Hz), run twice around the loop so its state is periodic
+    r = 0.9986; x1 = y1 = 0.0
+    for _ in range(2):
+        res = []
+        for x in out:
+            y = x - x1 + r * y1
+            x1, y1 = x, y
+            res.append(y)
+    return res
+
+def _render(bpm, bars, bass, lead, arp, drums, lead_wave):
     step = 60.0 / bpm / 4
     steps = bars * 16
     n = int(step * steps * SR)

@@ -40,7 +40,7 @@ public class TedMicrophoneItem extends Item {
                     other.sendSystemMessage(speech);
                 }
             }
-            for (LivingEntity mob : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(6.0), e -> e != player && e.isAlive())) {
+            for (LivingEntity mob : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(6.0), e -> e != player && e.isAlive() && net.minecraft.world.entity.EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(e))) {
                 Vec3 push = mob.position().subtract(player.position()).normalize();
                 mob.push(push.x * 1.4, 0.4, push.z * 1.4);
                 mob.hurtMarked = true;

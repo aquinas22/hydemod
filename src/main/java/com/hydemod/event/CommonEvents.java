@@ -64,7 +64,9 @@ public final class CommonEvents {
     /** Unlit or unpowered lightsabers are just metal tubes. */
     @SubscribeEvent
     static void onIncomingDamage(LivingIncomingDamageEvent event) {
-        if (event.getSource().getDirectEntity() instanceof LivingEntity attacker && event.getSource().getEntity() == attacker) {
+        boolean meleeHit = event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)
+                || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK);
+        if (meleeHit && event.getSource().getDirectEntity() instanceof LivingEntity attacker && event.getSource().getEntity() == attacker) {
             ItemStack weapon = attacker.getMainHandItem();
             if (weapon.getItem() instanceof LightsaberItem && !LightsaberItem.isActive(weapon)) {
                 event.setAmount(Math.min(event.getAmount(), 1.0F));
@@ -85,7 +87,9 @@ public final class CommonEvents {
             player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * 3, 0, true, false, true));
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 20 * 15, 0, true, false, true));
         }
-        if (player.isShiftKeyDown()) {
+        if (!player.isShiftKeyDown()) {
+            WarpPipeBlock.clearWarped(player);
+        } else {
             BlockPos feet = player.blockPosition();
             if (level.getBlockState(feet).is(ModBlocks.WARP_PIPE.get())) {
                 WarpPipeBlock.tryWarpFromInside(level, feet, player);

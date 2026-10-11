@@ -22,6 +22,7 @@ public class LightsaberHumSound extends AbstractTickableSoundInstance {
     private final LivingEntity holder;
     private float lastYaw;
     private int fade = 0;
+    private int age = 0;
 
     private LightsaberHumSound(LivingEntity holder) {
         super(ModSounds.SABER_HUM.get(), holder.getSoundSource(), holder.getRandom());
@@ -46,8 +47,12 @@ public class LightsaberHumSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
+        age++;
+        Minecraft client = Minecraft.getInstance();
         ItemStack saber = litSaber(holder);
-        if (holder.isRemoved() || !holder.isAlive()) {
+        // Stop if the holder left (died, changed dimension, respawned as a new entity object, ...)
+        if (holder.isRemoved() || !holder.isAlive() || holder.level() != client.level
+                || client.level == null || client.level.getEntity(holder.getId()) != holder) {
             stopNow();
             return;
         }
@@ -95,6 +100,7 @@ public class LightsaberHumSound extends AbstractTickableSoundInstance {
             ACTIVE.clear();
             return;
         }
+        ACTIVE.values().removeIf(hum -> hum.isStopped() || hum.age > 20 && !mc.getSoundManager().isActive(hum));
         for (LivingEntity entity : mc.level.getEntitiesOfClass(LivingEntity.class, mc.player.getBoundingBox().inflate(32.0))) {
             if (!ACTIVE.containsKey(entity.getId()) && !litSaber(entity).isEmpty()) {
                 LightsaberHumSound hum = new LightsaberHumSound(entity);
@@ -102,7 +108,8 @@ public class LightsaberHumSound extends AbstractTickableSoundInstance {
                 mc.getSoundManager().play(hum);
             }
         }
-        ACTIVE.values().removeIf(hum -> hum.isStopped() || !mc.getSoundManager().isActive(hum) && hum.fade > 5);
+        // Drop finished hums, and ones the engine never started/dropped (muted, channel pool full, sound reload).
+        ACTIVE.values().removeIf(hum -> hum.isStopped() || hum.age > 20 && !mc.getSoundManager().isActive(hum));
     }
 
 }

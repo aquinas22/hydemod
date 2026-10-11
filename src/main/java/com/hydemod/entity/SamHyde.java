@@ -121,8 +121,12 @@ public class SamHyde extends HydeBoss {
         }
         addEffect(new MobEffectInstance(MobEffects.SPEED, -1, 0, false, true));
         addEffect(new MobEffectInstance(MobEffects.STRENGTH, -1, 0, false, true));
-        bossEvent.setColor(BossEvent.BossBarColor.PURPLE);
         abilityCooldown = 40;
+    }
+
+    @Override
+    protected BossEvent.BossBarColor phaseTwoColor() {
+        return BossEvent.BossBarColor.PURPLE;
     }
 
     @Override

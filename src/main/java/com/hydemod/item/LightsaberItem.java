@@ -146,7 +146,11 @@ public class LightsaberItem extends Item {
             setBlade(stack, 0);
             return;
         }
-        int energy = getEnergy(stack) - ENERGY_PER_TICK;
+        // Drain once a second (not every tick) so the stack isn't resynced to the client 20x/second.
+        if (level.getGameTime() % 20 != 0) {
+            return;
+        }
+        int energy = getEnergy(stack) - ENERGY_PER_TICK * 20;
         if (energy < ENERGY_PER_HIT) {
             setIgnited(stack, false);
             level.playSound(null, owner.blockPosition(), ModSounds.SABER_RETRACT.get(), SoundSource.PLAYERS, 1.0F, 0.7F);
@@ -179,6 +183,18 @@ public class LightsaberItem extends Item {
                 level.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY(0.6), target.getZ(), 6, 0.2, 0.3, 0.2, 0.3);
             }
         }
+    }
+
+    /** Energy/blade component updates must not replay the equip animation in first person. */
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || !newStack.is(oldStack.getItem());
+    }
+
+    /** ...nor reset block-breaking progress while mining with a lit saber in hand. */
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return !newStack.is(oldStack.getItem());
     }
 
     @Override

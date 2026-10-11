@@ -35,6 +35,7 @@ public abstract class HydeBoss extends Monster {
     /** Packed as (sequence << 8) | animationId so repeating the same attack restarts the animation. */
     private static final EntityDataAccessor<Integer> DATA_ANIM = SynchedEntityData.defineId(HydeBoss.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_INTRO = SynchedEntityData.defineId(HydeBoss.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DATA_PHASE_TWO = SynchedEntityData.defineId(HydeBoss.class, EntityDataSerializers.BOOLEAN);
 
     protected final ServerBossEvent bossEvent;
     protected boolean phaseTwo;
@@ -57,6 +58,7 @@ public abstract class HydeBoss extends Monster {
         super.defineSynchedData(builder);
         builder.define(DATA_ANIM, 0);
         builder.define(DATA_INTRO, 0);
+        builder.define(DATA_PHASE_TWO, false);
     }
 
     // ------------------------------------------------------------------ animations
@@ -81,8 +83,11 @@ public abstract class HydeBoss extends Monster {
     }
 
     public boolean isPhaseTwoClient() {
-        return getHealth() <= getMaxHealth() * 0.5F;
+        return entityData.get(DATA_PHASE_TWO);
     }
+
+    /** Boss bar colour used once phase two has started. */
+    protected abstract BossEvent.BossBarColor phaseTwoColor();
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> accessor) {
@@ -163,6 +168,8 @@ public abstract class HydeBoss extends Monster {
         }
         if (!phaseTwo && getHealth() <= getMaxHealth() * 0.5F) {
             phaseTwo = true;
+            entityData.set(DATA_PHASE_TWO, true);
+            bossEvent.setColor(phaseTwoColor());
             onPhaseTwo(level);
             return;
         }
@@ -222,6 +229,10 @@ public abstract class HydeBoss extends Monster {
         super.readAdditionalSaveData(input);
         introduced = input.getBooleanOr("Introduced", false);
         phaseTwo = input.getBooleanOr("PhaseTwo", false);
+        entityData.set(DATA_PHASE_TWO, phaseTwo);
+        if (phaseTwo) {
+            bossEvent.setColor(phaseTwoColor());
+        }
         if (hasCustomName()) {
             bossEvent.setName(getDisplayName());
         }

@@ -34,6 +34,12 @@ public class SummonBossItem extends Item {
         if (!(context.getLevel() instanceof ServerLevel level)) {
             return InteractionResult.SUCCESS;
         }
+        if (level.getDifficulty() == net.minecraft.world.Difficulty.PEACEFUL) {
+            if (context.getPlayer() != null) {
+                context.getPlayer().sendOverlayMessage(Component.translatable("message.hydemod.boss_peaceful").withStyle(ChatFormatting.RED));
+            }
+            return InteractionResult.FAIL;
+        }
         BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
         Mob mob = boss.get().spawn(level, pos, EntitySpawnReason.TRIGGERED);
         if (mob == null) {

@@ -119,7 +119,6 @@ public class ElephantMario extends HydeBoss {
         addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20 * 4, 2));
         level.sendParticles(ParticleTypes.EXPLOSION, getX(), getY() + 1.5, getZ(), 8, 1.5, 1.0, 1.5, 0.0);
         level.sendParticles(ParticleTypes.ANGRY_VILLAGER, getX(), getY() + 3, getZ(), 12, 1.0, 0.5, 1.0, 0.0);
-        bossEvent.setColor(BossEvent.BossBarColor.PINK);
         startRing(getX(), getY(), getZ(), 10.0F);
         abilityCooldown = 40;
     }
@@ -129,6 +128,11 @@ public class ElephantMario extends HydeBoss {
         if (inst != null && !inst.hasModifier(POWER_ID)) {
             inst.addPermanentModifier(new AttributeModifier(POWER_ID, amount, AttributeModifier.Operation.ADD_VALUE));
         }
+    }
+
+    @Override
+    protected BossEvent.BossBarColor phaseTwoColor() {
+        return BossEvent.BossBarColor.PINK;
     }
 
     @Override
@@ -188,7 +192,8 @@ public class ElephantMario extends HydeBoss {
         level.sendParticles(ParticleTypes.EXPLOSION, getX(), getY() + 0.3, getZ(), 4, 1.5, 0.2, 1.5, 0.0);
         float radius = phaseTwo ? 9.0F : 6.5F;
         startRing(getX(), getY(), getZ(), radius);
-        for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(radius, 2.5, radius), e -> e != this)) {
+        for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(radius, 2.5, radius),
+                e -> e != this && net.minecraft.world.entity.EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(e))) {
             double dist = victim.distanceTo(this);
             if (dist > radius) {
                 continue;

@@ -71,9 +71,12 @@ public class DepthGrovler extends Monster {
     /** Any player falling onto our head squashes us. */
     private void checkStomp(ServerLevel level) {
         double headY = getY() + getBbHeight();
-        for (Player player : level.getEntitiesOfClass(Player.class, getBoundingBox().inflate(0.15, 0.6, 0.15))) {
-            boolean falling = player.getDeltaMovement().y < -0.08 || player.fallDistance > 0.4;
-            if (falling && !player.onGround() && player.getY() >= headY - 0.45 && !player.isSpectator()) {
+        var box = getBoundingBox();
+        for (Player player : level.getEntitiesOfClass(Player.class, box.inflate(0.15, 0.6, 0.15))) {
+            // Must come down from above, with the player's centre over our head (not a jump-crit beside us).
+            boolean falling = player.getKnownMovement().y < -0.08;
+            boolean above = player.getX() >= box.minX && player.getX() <= box.maxX && player.getZ() >= box.minZ && player.getZ() <= box.maxZ;
+            if (falling && above && !player.onGround() && player.getY() >= headY - 0.45 && !player.isSpectator()) {
                 squash(level, player);
                 return;
             }
@@ -86,7 +89,8 @@ public class DepthGrovler extends Monster {
         stomper.setDeltaMovement(stomper.getDeltaMovement().x, 0.65, stomper.getDeltaMovement().z);
         stomper.hurtMarked = true;
         stomper.resetFallDistance();
-        hurtServer(level, damageSources().playerAttack(stomper), Float.MAX_VALUE);
+        // Not a weapon hit: whatever is in the stomper's hand (e.g. an unlit lightsaber) mustn't affect it.
+        hurtServer(level, damageSources().source(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK_NO_AGGRO, stomper), Float.MAX_VALUE);
     }
 
     @Override

@@ -41,6 +41,13 @@ public class WarpPipeBlock extends BaseEntityBlock {
         return net.minecraft.world.level.block.Block.box(x1, y1, z1, x2, y2, z2);
     }
 
+    /** Entities that warped and haven't released sneak yet (prevents ping-ponging while sneak is held). */
+    private static final java.util.Set<java.util.UUID> WARPED = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    public static void clearWarped(Entity entity) {
+        WARPED.remove(entity.getUUID());
+    }
+
     public WarpPipeBlock(Properties properties) {
         super(properties);
     }
@@ -100,7 +107,7 @@ public class WarpPipeBlock extends BaseEntityBlock {
 
     private static void warp(ServerLevel level, BlockPos pos, WarpPipeBlockEntity pipe, Entity entity) {
         GlobalPos target = pipe.getTarget();
-        if (target == null) {
+        if (target == null || WARPED.contains(entity.getUUID())) {
             return;
         }
         ServerLevel targetLevel = level.getServer().getLevel(target.dimension());
@@ -115,6 +122,7 @@ public class WarpPipeBlock extends BaseEntityBlock {
         level.sendParticles(ParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5, 15, 0.3, 0.2, 0.3, 0.02);
         BlockPos dest = target.pos();
         entity.setPortalCooldown(40);
+        WARPED.add(entity.getUUID());
         entity.teleportTo(targetLevel, dest.getX() + 0.5, dest.getY() + 1.0, dest.getZ() + 0.5, Set.of(), entity.getYRot(), entity.getXRot(), true);
         targetLevel.playSound(null, dest, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 1.0F, 1.4F);
         targetLevel.sendParticles(ParticleTypes.CLOUD, dest.getX() + 0.5, dest.getY() + 1.1, dest.getZ() + 0.5, 15, 0.3, 0.2, 0.3, 0.02);

@@ -21,6 +21,7 @@ public final class BossMusic {
     private static final class Track extends AbstractTickableSoundInstance {
         private final SoundEvent event;
         private boolean fading;
+        private int age;
 
         Track(SoundEvent event) {
             super(event, SoundSource.MUSIC, RandomSource.create());
@@ -34,6 +35,7 @@ public final class BossMusic {
 
         @Override
         public void tick() {
+            age++;
             if (fading) {
                 volume -= 0.03F;
                 if (volume <= 0.0F) {
@@ -47,6 +49,13 @@ public final class BossMusic {
 
     static void tick() {
         Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) {
+            current = null; // disconnect stops every sound without marking it stopped
+            return;
+        }
+        if (current != null && (current.isStopped() || current.age > 20 && !mc.getSoundManager().isActive(current))) {
+            current = null; // sound engine dropped it (F3+T, device change, ...): start fresh
+        }
         HydeBoss boss = null;
         if (mc.level != null && mc.player != null) {
             double best = 64 * 64;

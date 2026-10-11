@@ -221,6 +221,7 @@ lang = {
     "message.hydemod.sam_hyde_summoned": "Please welcome the final speaker of the final session: SAM HYDE. 2070 PARADIGM SHIFT.",
     "message.hydemod.elephant_mario_summoned": "The ground trembles. Somewhere, an elephant puts on a cap. ELEPHANT MARIO has arrived!",
     "chat.hydemod.speaker": "<%s> %s",
+    "message.hydemod.boss_peaceful": "Bosses can't be summoned on Peaceful difficulty.",
     "title.hydemod.sam_hyde": "SAM HYDE",
     "title.hydemod.sam_hyde.sub": "2070 PARADIGM SHIFT",
     "title.hydemod.paradigm_shift": "PARADIGM SHIFT",
@@ -438,7 +439,7 @@ ore_feature("ore_red_kyber", [target_block("minecraft:netherrack", f"{M}:nether_
 placed("ore_red_kyber", 3, {"above_bottom": 10}, {"below_top": 10})
 # Purple: the End, in end stone, rarest
 ore_feature("ore_purple_kyber", [target_block("minecraft:end_stone", f"{M}:end_purple_kyber_ore")], 3)
-placed("ore_purple_kyber", 2, {"absolute": 0}, {"absolute": 80})
+placed("ore_purple_kyber", 4, {"absolute": 0}, {"absolute": 80})
 
 def biome_mod(name, biomes, feature):
     w(f"{D}/neoforge/biome_modifier/{name}.json", {"type": "neoforge:add_features", "biomes": biomes,
