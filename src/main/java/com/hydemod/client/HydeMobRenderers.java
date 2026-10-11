@@ -72,7 +72,7 @@ public final class HydeMobRenderers {
 
         @Override
         protected void scale(BossRenderStates.ElephantState state, PoseStack poseStack) {
-            poseStack.scale(1.25F, 1.25F, 1.25F);
+            poseStack.scale(1.15F, 1.15F, 1.15F);
         }
     }
 

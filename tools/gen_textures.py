@@ -1348,12 +1348,129 @@ def peanut_item():
     draw_rows(img, rows, {"s": shell, "S": dk, "d": dk, ".": None})
     return outline(img, hexc("3a2410"))
 
+def elephant_v2():
+    """Original cartoon elephant plumber: blue-grey skin, pink ears, big eyes + heavy brows,
+    red cap with a gold star, white shirt, brown overalls with big gold buttons."""
+    img = new(128, 128)
+    skin = hexc("a9b4c8"); skin_dk = hexc("8591a8"); skin_hi = hexc("c4cddd"); pink = hexc("f2a7b8"); pink_dk = hexc("d98a9c")
+    cap = hexc("d8322f"); cap_dk = hexc("a8221f"); cap_hi = hexc("ee5a52"); star = hexc("ffd23a"); star_dk = hexc("d9a514")
+    shirt = hexc("f4f2ec"); shirt_dk = hexc("d8d4c8")
+    over = hexc("7a4a26"); over_dk = hexc("5c3519"); over_hi = hexc("925c32"); button = hexc("ffd23a"); button_dk = hexc("c99a12")
+    white = hexc("ffffff"); black = hexc("15151c"); brow = hexc("3a3f4f"); iris = hexc("2b6fd6"); toenail = hexc("eeeae0")
+
+    def skin_face(img, x0, y0, w, h, seed=0):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.04, seed)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), skin_dk)
+
+    # ---- body 18x16x12 @ (0,0): white shirt top, brown overalls with straps + big buttons
+    def body_face(img, x0, y0, w, h, front=False, back=False):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), over, 0.05, 1)
+        for y in range(y0, y0 + 5):
+            for x in range(x0, x0 + w): img.putpixel((x, y), shirt if (x + y) % 7 else shirt_dk)
+        if front or back:
+            for sx in (x0 + 3, x0 + w - 5):  # straps over the shirt
+                for y in range(y0, y0 + 6):
+                    img.putpixel((sx, y), over); img.putpixel((sx + 1, y), over_dk)
+        if front:
+            for bx in (x0 + 3, x0 + w - 5):  # big buttons
+                for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
+                    img.putpixel((bx + dx, y0 + 5 + dy), button)
+                img.putpixel((bx + 1, y0 + 6), button_dk)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), over_dk)
+        for y in range(y0 + 6, y0 + h - 1, 4):
+            img.putpixel((x0 + w // 2, y), over_hi)  # stitching
+    box_uv(img, 0, 0, 18, 16, 12, {"front": lambda i, a, b, c, d: body_face(i, a, b, c, d, front=True),
+                                   "back": lambda i, a, b, c, d: body_face(i, a, b, c, d, back=True),
+                                   "right": body_face, "left": body_face, "top": solid(shirt, 0.03, 2), "bottom": solid(over_dk)})
+    # ---- belly 14x10x2 @ (60,0): overalls bib with a front pocket
+    def bib(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), over_hi, 0.04, 3)
+        if w >= 10:
+            for x in range(x0 + 4, x0 + w - 4):
+                img.putpixel((x, y0 + 3), over_dk); img.putpixel((x, y0 + 7), over_dk)
+            for y in range(y0 + 3, y0 + 8):
+                img.putpixel((x0 + 4, y), over_dk); img.putpixel((x0 + w - 5, y), over_dk)
+    box_uv(img, 60, 0, 14, 10, 2, {"default": bib})
+    # ---- head 14x12x12 @ (0,28): huge friendly eyes, heavy brows, rosy cheeks
+    def head_front(img, x0, y0, w, h):
+        skin_face(img, x0, y0, w, h, 4)
+        for ex in (2, 8):  # big eyes, 4 wide x 5 tall
+            for dy in range(5):
+                for dx in range(4):
+                    corner = (dx in (0, 3)) and (dy in (0, 4))
+                    if not corner: img.putpixel((x0 + ex + dx, y0 + 2 + dy), white)
+            img.putpixel((x0 + ex + 1, y0 + 4), iris); img.putpixel((x0 + ex + 2, y0 + 4), iris)
+            img.putpixel((x0 + ex + 1, y0 + 5), iris); img.putpixel((x0 + ex + 2, y0 + 5), black)
+            img.putpixel((x0 + ex + 1, y0 + 3), white)  # sparkle
+            for dx in range(-1, 5):  # heavy angled brows
+                yy = y0 + 1 if (dx in (1, 2)) else y0 + (1 if (ex == 2 and dx > 2) or (ex == 8 and dx < 1) else 0)
+                if 0 <= dx + ex < w: img.putpixel((x0 + ex + dx, yy), brow)
+        img.putpixel((x0 + 1, y0 + 8), pink); img.putpixel((x0 + 2, y0 + 8), pink)  # cheeks
+        img.putpixel((x0 + w - 2, y0 + 8), pink); img.putpixel((x0 + w - 3, y0 + 8), pink)
+        for x in range(x0 + 5, x0 + 9): img.putpixel((x, y0 + 10), skin_dk)  # smile under the trunk
+        img.putpixel((x0 + 4, y0 + 9), skin_dk); img.putpixel((x0 + 9, y0 + 9), skin_dk)
+    box_uv(img, 0, 28, 14, 12, 12, {"front": head_front, "default": lambda i, a, b, c, d: skin_face(i, a, b, c, d, 5),
+                                    "top": solid(skin_hi, 0.04, 6)})
+    # ---- cap 15x4x13 @ (0,52) with a gold star on the front; brim 15x1x5 @ (56,52)
+    def cap_front(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), cap, 0.04, 7)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), cap_dk)
+        cx = x0 + w // 2
+        star_px = ["..#..", "#####", ".###.", "#...#"]  # bold 5x4 star badge
+        for dy, row in enumerate(star_px):
+            for dx, ch in enumerate(row):
+                if ch == "#" and dy < h: img.putpixel((cx - 2 + dx, y0 + dy), star if dy < 2 else star_dk)
+        for dx in (-3, 3):  # dark outline so it pops on red
+            img.putpixel((cx + dx, y0 + 1), cap_dk)
+    def cap_side(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), cap, 0.04, 8)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), cap_dk)
+        for x in range(x0, x0 + w, 3): img.putpixel((x, y0), cap_hi)
+    box_uv(img, 0, 52, 15, 4, 13, {"front": cap_front, "default": cap_side, "top": solid(cap_hi, 0.06, 9)})
+    box_uv(img, 56, 52, 15, 1, 5, {"default": solid(cap_dk, 0.04, 10), "top": solid(cap, 0.04, 11)})
+    # ---- ears 1x12x10 @ (92,0): pink inside
+    def ear(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.04, 12)
+        if w >= 8:
+            for y in range(y0 + 2, y0 + h - 2):
+                for x in range(x0 + 2, x0 + w - 1):
+                    img.putpixel((x, y), pink if (x + y) % 6 else pink_dk)
+    box_uv(img, 92, 0, 1, 12, 10, {"default": ear})
+    # ---- trunk segments with wrinkle rings
+    def trunk(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.04, 13)
+        for y in range(y0 + 1, y0 + h, 2):
+            for x in range(x0, x0 + w): img.putpixel((x, y), skin_dk)
+    box_uv(img, 60, 12, 5, 5, 5, {"default": trunk})
+    box_uv(img, 80, 12, 4, 5, 4, {"default": trunk})
+    box_uv(img, 96, 22, 3, 5, 3, {"default": trunk})
+    box_uv(img, 108, 22, 4, 2, 4, {"default": solid(skin_hi, 0.03, 14), "bottom": solid(pink_dk)})
+    box_uv(img, 116, 0, 1, 1, 3, {"default": solid(hexc("f6f1e0"), 0.02, 15)})
+    # ---- arms 6x13x6 @ (60,28): white puffy sleeves, grey arms, round hands
+    def arm(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.04, 16)
+        for y in range(y0, y0 + 5):
+            for x in range(x0, x0 + w): img.putpixel((x, y), shirt if y < y0 + 4 else shirt_dk)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), skin_dk)
+    box_uv(img, 60, 28, 6, 13, 6, {"default": arm, "top": solid(shirt), "bottom": solid(skin_hi)})
+    # ---- legs 7x9x7 @ (84,28): brown overall legs, big round grey feet with toenails
+    def leg(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), over, 0.05, 17)
+        for x in range(x0, x0 + w):
+            img.putpixel((x, y0 + h - 4), over_dk)
+            for y in range(y0 + h - 3, y0 + h): img.putpixel((x, y), skin)
+        if w == 7:
+            for x in (x0 + 1, x0 + 3, x0 + 5): img.putpixel((x, y0 + h - 1), toenail)
+    box_uv(img, 84, 28, 7, 9, 7, {"default": leg, "top": solid(over), "bottom": solid(skin_dk)})
+    return img
+
 def main_v11():
     # Sam Hyde 2070 + Hyde's Armour
     save(sam_hyde_2070(), "entity/sam_hyde.png")
     save(hyde_armor_2070(False), "entity/equipment/humanoid/hyde.png")
     save(hyde_armor_2070(True), "entity/equipment/humanoid_leggings/hyde.png")
     save(goober(), "entity/depth_grovler.png")
+    save(elephant_v2(), "entity/elephant_mario.png")
     # ores: glowing, pulsing crystal overlays (base stone comes from vanilla textures)
     for name, c in KYBER.items():
         save_anim([crystal_overlay(c, f / 12) for f in range(12)], f"block/{name}_kyber_crystals.png", 2)
