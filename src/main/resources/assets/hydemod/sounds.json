@@ -1,8 +1,112 @@
 {
-  "lightsaber.ignite": {"subtitle": "subtitles.hydemod.lightsaber.ignite", "sounds": [{"name": "hydemod:lightsaber/ignite"}]},
-  "lightsaber.retract": {"subtitle": "subtitles.hydemod.lightsaber.retract", "sounds": [{"name": "hydemod:lightsaber/retract"}]},
-  "lightsaber.hum": {"subtitle": "subtitles.hydemod.lightsaber.hum", "sounds": [{"name": "hydemod:lightsaber/hum", "stream": false}]},
-  "lightsaber.swing": {"subtitle": "subtitles.hydemod.lightsaber.swing", "sounds": [
-    {"name": "hydemod:lightsaber/swing1"}, {"name": "hydemod:lightsaber/swing2"}, {"name": "hydemod:lightsaber/swing3"}]},
-  "lightsaber.hit": {"subtitle": "subtitles.hydemod.lightsaber.hit", "sounds": [{"name": "hydemod:lightsaber/hit"}]}
+  "lightsaber.ignite": {
+    "subtitle": "subtitles.hydemod.lightsaber.ignite",
+    "sounds": [
+      {
+        "name": "hydemod:lightsaber/ignite"
+      }
+    ]
+  },
+  "lightsaber.retract": {
+    "subtitle": "subtitles.hydemod.lightsaber.retract",
+    "sounds": [
+      {
+        "name": "hydemod:lightsaber/retract"
+      }
+    ]
+  },
+  "lightsaber.hum": {
+    "subtitle": "subtitles.hydemod.lightsaber.hum",
+    "sounds": [
+      {
+        "name": "hydemod:lightsaber/hum",
+        "stream": false
+      }
+    ]
+  },
+  "lightsaber.swing": {
+    "subtitle": "subtitles.hydemod.lightsaber.swing",
+    "sounds": [
+      {
+        "name": "hydemod:lightsaber/swing1"
+      },
+      {
+        "name": "hydemod:lightsaber/swing2"
+      },
+      {
+        "name": "hydemod:lightsaber/swing3"
+      }
+    ]
+  },
+  "lightsaber.hit": {
+    "subtitle": "subtitles.hydemod.lightsaber.hit",
+    "sounds": [
+      {
+        "name": "hydemod:lightsaber/hit"
+      }
+    ]
+  },
+  "boss.trumpet": {
+    "subtitle": "subtitles.hydemod.boss.trumpet",
+    "sounds": [
+      {
+        "name": "hydemod:boss/trumpet",
+        "stream": false
+      }
+    ]
+  },
+  "boss.boom": {
+    "subtitle": "subtitles.hydemod.boss.boom",
+    "sounds": [
+      {
+        "name": "hydemod:boss/boom",
+        "stream": false
+      }
+    ]
+  },
+  "boss.applause": {
+    "subtitle": "subtitles.hydemod.boss.applause",
+    "sounds": [
+      {
+        "name": "hydemod:boss/applause",
+        "stream": false
+      }
+    ]
+  },
+  "boss.intro": {
+    "subtitle": "subtitles.hydemod.boss.intro",
+    "sounds": [
+      {
+        "name": "hydemod:boss/intro_sting",
+        "stream": false
+      }
+    ]
+  },
+  "boss.phase": {
+    "subtitle": "subtitles.hydemod.boss.phase",
+    "sounds": [
+      {
+        "name": "hydemod:boss/phase_sting",
+        "stream": false
+      }
+    ]
+  },
+  "music.sam_hyde": {
+    "subtitle": "subtitles.hydemod.music.sam_hyde",
+    "sounds": [
+      {
+        "name": "hydemod:music/sam_hyde_theme",
+        "stream": true
+      }
+    ]
+  },
+  "music.elephant_mario": {
+    "subtitle": "subtitles.hydemod.music.elephant_mario",
+    "sounds": [
+      {
+        "name": "hydemod:music/elephant_mario_theme",
+        "stream": true
+      }
+    ]
+  }
 }

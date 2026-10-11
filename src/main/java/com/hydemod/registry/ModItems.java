@@ -104,8 +104,16 @@ public final class ModItems {
                     Consumables.defaultFood().consumeSeconds(0.8F).onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
                             new MobEffectInstance(MobEffects.SPEED, 20 * 20, 0),
                             new MobEffectInstance(MobEffects.JUMP_BOOST, 20 * 20, 0)))).build()));
-    public static final DeferredItem<SummonBossItem> ELEPHANT_FRUIT = ITEMS.registerItem("elephant_fruit",
+    /** Summons Elephant Mario: he can smell a box this big from miles away. */
+    public static final DeferredItem<SummonBossItem> GIANT_GOOBERS_BOX = ITEMS.registerItem("giant_goobers_box",
             p -> new SummonBossItem(p, ModEntities.ELEPHANT_MARIO::get, "message.hydemod.elephant_mario_summoned"), p -> p.stacksTo(1).rarity(Rarity.EPIC));
+    /** Dropped by Elephant Mario: one hour of Strength II and Speed II. */
+    public static final DeferredItem<Item> ELEPHANT_FRUIT = ITEMS.registerSimpleItem("elephant_fruit",
+            p -> p.rarity(Rarity.EPIC).component(net.minecraft.core.component.DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+                    .food(new FoodProperties.Builder().nutrition(8).saturationModifier(1.2F).alwaysEdible().build(),
+                            Consumables.defaultFood().onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                                    new MobEffectInstance(MobEffects.STRENGTH, 20 * 60 * 60, 1),
+                                    new MobEffectInstance(MobEffects.SPEED, 20 * 60 * 60, 1)))).build()));
     public static final DeferredItem<Item> SUPER_PEANUT = ITEMS.registerSimpleItem("super_peanut",
             p -> p.rarity(Rarity.RARE).food(new FoodProperties.Builder().nutrition(6).saturationModifier(1.0F).alwaysEdible().build(),
                     Consumables.defaultFood().sound(SoundEvents.GENERIC_EAT).onConsume(new ApplyStatusEffectsConsumeEffect(List.of(

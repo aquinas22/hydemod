@@ -1309,6 +1309,23 @@ def goobers_item():
         img.putpixel((cx, cy - 1 if cy > 0 else cy), choc_hi); img.putpixel((cx + 1, cy + 1), choc_dk)
     return outline(img, hexc("2a1408"))
 
+def giant_goobers_box():
+    """A big gold-trimmed carton overflowing with chocolate peanuts."""
+    img = new()
+    box = hexc("e8d24a"); box_dk = hexc("b89a2a"); gold = hexc("ffd84a"); choc = hexc("5a3218"); hi = hexc("8a5a34")
+    for y in range(5, 15):
+        for x in range(2, 14):
+            img.putpixel((x, y), box if x < 11 else box_dk)
+    for x in range(2, 14):
+        img.putpixel((x, 5), gold); img.putpixel((x, 14), shade(box_dk, 0.8))
+    for x in range(4, 12): img.putpixel((x, 9), hexc("c0392b")); img.putpixel((x, 10), hexc("c0392b"))
+    for (cx, cy) in ((4, 3), (7, 2), (10, 3), (5, 4), (8, 4), (12, 4), (6, 1)):
+        for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
+            if 0 <= cx + dx < 16 and 0 <= cy + dy < 16: img.putpixel((cx + dx, cy + dy), choc)
+        img.putpixel((cx, cy), hi)
+    px(img, [(1, 1), (14, 2), (13, 0)], hexc("fff6b0"))
+    return outline(img, hexc("2a1408"))
+
 def peanut_item():
     img = new()
     shell = hexc("d9b27a"); dk = hexc("a8824a")
@@ -1345,6 +1362,7 @@ def main_v11():
         save_anim(blade_core_frames(c), f"item/lightsaber_blade_{name}.png", 1)
         save_anim(blade_halo_frames(c), f"item/lightsaber_halo_{name}.png", 2)
     save(goobers_item(), "item/goobers.png")
+    save(giant_goobers_box(), "item/giant_goobers_box.png")
     save(peanut_item(), "item/peanut.png")
     save(spawn_egg(hexc("8a4fd0"), hexc("c9b27a")), "item/depth_grovler_spawn_egg.png")
     # retire v1.0 files

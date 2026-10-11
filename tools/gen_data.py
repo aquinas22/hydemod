@@ -20,7 +20,7 @@ shutil.rmtree(D, ignore_errors=True)
 SIMPLE_ITEMS = ["trash_cube", "neoplas_nugget", "neoplas_ingot", "paradigm_shift_core", "sea_beet", "sea_yam", "sea_cabbage",
                 "sea_salad", "sea_cheesy_baked_potato", "bulletproof_coffee", "soda_stream", "soda", "pat_on_the_back",
                 "mind_upload_blackberry", "reset_the_clock", "maglev_moon_launcher", "einstein_parable", "tedx_invitation",
-                "goobers", "peanut", "elephant_fruit", "super_peanut", "hyde_helmet", "hyde_chestplate", "hyde_leggings", "hyde_boots",
+                "goobers", "peanut", "elephant_fruit", "giant_goobers_box", "super_peanut", "hyde_helmet", "hyde_chestplate", "hyde_leggings", "hyde_boots",
                 "green_kyber_crystal", "blue_kyber_crystal", "red_kyber_crystal", "purple_kyber_crystal", "lightsaber_hilt",
                 "sam_hyde_spawn_egg", "elephant_mario_spawn_egg", "depth_grovler_spawn_egg"]
 HANDHELD = ["ted_microphone", "pipe_wrench"]
@@ -146,6 +146,7 @@ lang = {
     "item.hydemod.goobers": "Goobers",
     "item.hydemod.peanut": "Peanut",
     "item.hydemod.elephant_fruit": "Elephant Fruit",
+    "item.hydemod.giant_goobers_box": "Giant Box of Goobers",
     "item.hydemod.super_peanut": "Super Peanut",
     "item.hydemod.pipe_wrench": "Pipe Wrench",
     "item.hydemod.hyde_helmet": "Hyde's Helmet",
@@ -187,7 +188,8 @@ lang = {
     "tooltip.hydemod.maglev_moon_launcher": "Maglev trains to get resources to the Moon. You are the resource.",
     "tooltip.hydemod.einstein": "A parable about a second-tier college. You'll never guess who the student was.",
     "tooltip.hydemod.tedx_invitation": "Use on a block to invite the final speaker of the final session.",
-    "tooltip.hydemod.elephant_fruit": "Use on a block. Something big wants this.",
+    "tooltip.hydemod.elephant_fruit": "Eat it: Strength II and Speed II for one hour. Dropped by Elephant Mario.",
+    "tooltip.hydemod.giant_goobers_box": "Use on a block. Something big can smell it from miles away...",
     "tooltip.hydemod.pipe_wrench": "Right-click one Warp Pipe, then another, to link them.",
     "tooltip.hydemod.pipe_wrench.pending": "First pipe: %s %s %s - now click the second pipe",
     "tooltip.hydemod.lightsaber.energy": "%s / %s RF",
@@ -219,6 +221,22 @@ lang = {
     "message.hydemod.sam_hyde_summoned": "Please welcome the final speaker of the final session: SAM HYDE. 2070 PARADIGM SHIFT.",
     "message.hydemod.elephant_mario_summoned": "The ground trembles. Somewhere, an elephant puts on a cap. ELEPHANT MARIO has arrived!",
     "chat.hydemod.speaker": "<%s> %s",
+    "title.hydemod.sam_hyde": "SAM HYDE",
+    "title.hydemod.sam_hyde.sub": "2070 PARADIGM SHIFT",
+    "title.hydemod.paradigm_shift": "PARADIGM SHIFT",
+    "title.hydemod.paradigm_shift.sub": "The future is NOW.",
+    "title.hydemod.elephant_mario": "ELEPHANT MARIO",
+    "title.hydemod.elephant_mario.sub": "Who ate my fruit?!",
+    "title.hydemod.elephant_power": "ELEPHANT POWER",
+    "title.hydemod.elephant_power.sub": "He's getting BIGGER",
+    "title.hydemod.defeated": "BOSS DEFEATED",
+    "subtitles.hydemod.boss.trumpet": "Elephant trumpets",
+    "subtitles.hydemod.boss.boom": "Ground pound slams",
+    "subtitles.hydemod.boss.applause": "Audience applauds",
+    "subtitles.hydemod.boss.intro": "Boss appears",
+    "subtitles.hydemod.boss.phase": "Boss powers up",
+    "subtitles.hydemod.music.sam_hyde": "Music: 2070 Paradigm Shift",
+    "subtitles.hydemod.music.elephant_mario": "Music: Elephant Stomp",
 }
 # Sam Hyde's lines: short riffs on the talk, written for the mod.
 sam = {
@@ -231,6 +249,8 @@ sam = {
     "coffee": "You're drinking Bulletproof Coffee and you don't even realize it. I'm all jagged up in the head!",
     "pat": "Let's pat ourselves on the back. That one's for saving the world.",
     "death": "Man... we're so screwed. Thanks for having me. What do you want me to walk to here?",
+    "phase_two": "Okay, okay. Now it's 2070. Now what? PARADIGM SHIFT!",
+    "trash_rain": "Are we going to put it on an island? Make it somebody else's problem? IT'S RAINING TRASH!",
 }
 for k, v in sam.items():
     lang[f"boss.hydemod.sam_hyde.{k}"] = v
@@ -283,6 +303,7 @@ em = {
     "spray": "*fwoosh* Trunk spray!",
     "goobers": "Have some GOOBERS!",
     "snack": "*munch munch* ...Goobers break.",
+    "phase_two": "*EARTH-SHAKING TRUMPET* ELEPHANT POWER!",
     "charge": "*TRUMPET* Here I come!",
     "death": "*sad trumpet* ...my peanuts...",
 }
@@ -341,6 +362,10 @@ def item(name, lo, hi, chance=None, looting=True):
 def entity_loot(name, pools):
     w(f"{D}/loot_table/entities/{name}.json", {"type": "minecraft:entity", "random_sequence": f"{M}:entities/{name}", "pools": pools})
 entity_loot("sam_hyde", [
+    item(f"{M}:hyde_helmet", 1, 1, looting=False),
+    item(f"{M}:hyde_chestplate", 1, 1, looting=False),
+    item(f"{M}:hyde_leggings", 1, 1, looting=False),
+    item(f"{M}:hyde_boots", 1, 1, looting=False),
     item(f"{M}:paradigm_shift_core", 1, 1, looting=False),
     item(f"{M}:neoplas_ingot", 6, 10),
     item(f"{M}:ted_microphone", 1, 1, looting=False),
@@ -352,6 +377,7 @@ entity_loot("sam_hyde", [
     item(f"{M}:einstein_parable", 1, 1, looting=False),
 ])
 entity_loot("elephant_mario", [
+    item(f"{M}:elephant_fruit", 2, 4),
     item(f"{M}:warp_pipe", 4, 6),
     item(f"{M}:pipe_wrench", 1, 1, looting=False),
     item(f"{M}:super_peanut", 3, 5),
@@ -464,8 +490,8 @@ shaped("maglev_moon_launcher", ["  N", " R ", "I  "], {"N": f"{M}:neoplas_ingot"
 shaped("tedx_invitation", ["PNP", "TBT", "PNP"], {"P": "minecraft:paper", "N": f"{M}:neoplas_nugget", "T": f"{M}:trash_cube",
        "B": "minecraft:writable_book"}, f"{M}:tedx_invitation")
 shapeless("goobers", [f"{M}:peanut", f"{M}:peanut", "minecraft:cocoa_beans", "minecraft:sugar"], f"{M}:goobers", 4)
-shaped("elephant_fruit", ["GOG", "OAO", "GOG"], {"G": "minecraft:gold_ingot", "O": f"{M}:goobers", "A": "minecraft:apple"},
-       f"{M}:elephant_fruit")
+shaped("giant_goobers_box", ["GOG", "OAO", "GOG"], {"G": "minecraft:gold_ingot", "O": f"{M}:goobers", "A": "minecraft:golden_apple"},
+       f"{M}:giant_goobers_box")
 shaped("warp_pipe", ["III", "IEI", "III"], {"I": "minecraft:iron_ingot", "E": "minecraft:ender_pearl"}, f"{M}:warp_pipe", 2)
 shapeless("warp_pipe_dye", [f"{M}:warp_pipe", "minecraft:green_dye"], f"{M}:warp_pipe")
 shaped("pipe_wrench", [" I ", " II", "I  "], {"I": "minecraft:iron_ingot"}, f"{M}:pipe_wrench", cat="equipment")

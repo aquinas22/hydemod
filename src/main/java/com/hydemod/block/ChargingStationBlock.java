@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Lightsaber charging station.
- * - Right-click with redstone dust (or a redstone block) to convert it into Redstone Flux.
+ * - Right-click with redstone dust (or redstone blocks) to convert the stack into Redstone Flux.
  * - Right-click with a lightsaber to charge it.
  * - Empty hand shows the stored energy.
  * - Pipe FE into it from any tech mod.
@@ -54,7 +54,7 @@ public class ChargingStationBlock extends BaseEntityBlock {
                 : stack.is(Items.REDSTONE_BLOCK) ? ChargingStationBlockEntity.FE_PER_REDSTONE * 9 : 0;
         if (perItem > 0) {
             if (level instanceof ServerLevel serverLevel) {
-                int count = player.isShiftKeyDown() ? stack.getCount() : 1;
+                int count = stack.getCount(); // feeds in as much of the stack as fits
                 int used = 0;
                 while (used < count && ChargingStationBlockEntity.CAPACITY - station.stored() >= perItem) {
                     station.addEnergy(perItem);

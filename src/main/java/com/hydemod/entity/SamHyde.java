@@ -2,8 +2,11 @@ package com.hydemod.entity;
 
 import com.hydemod.registry.ModEntities;
 import com.hydemod.registry.ModItems;
+import com.hydemod.registry.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -15,7 +18,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -39,19 +44,24 @@ import org.jspecify.annotations.Nullable;
 /**
  * Sam Hyde, passionate childlike innovator, delivering "2070 Paradigm Shift" whether you like it or not.
  *
- * Abilities (one every few seconds while he has a target):
+ * Phase 1:
  *  - Trash Economy: hurls a volley of trash cubes.
  *  - "Close your eyes": blinds everyone nearby.
- *  - Depth Grovlers: calls up underground toilers from the tiered cities.
+ *  - Depth Grovlers: calls up toilers from the tiered cities below.
  *  - Maglev to the Moon: launches his target into the sky.
  *  - Bulletproof Coffee: gets all jagged up (speed + strength).
- *  - Pat on the back: heals himself.
- *  - Once, under 25% health: "Can we reset the clock?" - heals a big chunk.
+ *  - Pat on the back: heals himself to applause.
+ * Phase 2 (half health) - PARADIGM SHIFT: lightning, permanent speed/strength, faster abilities,
+ * and Trash Rain (cubes of trash pour from the sky onto everyone).
+ * Once, under 20% health: "Can we reset the clock?" - heals a big chunk.
  */
 public class SamHyde extends HydeBoss {
-    private int abilityCooldown = 60;
+    public static final int ANIM_THROW = 1, ANIM_CLOSE_EYES = 2, ANIM_SUMMON = 3, ANIM_MAGLEV = 4, ANIM_COFFEE = 5,
+            ANIM_PAT = 6, ANIM_RESET = 7, ANIM_RAIN = 8, ANIM_INTRO = 9;
+
+    private int abilityCooldown = 40;
     private boolean usedResetClock;
-    private boolean introduced;
+    private int trashRainTicks;
 
     public SamHyde(EntityType<? extends Monster> type, Level level) {
         super(type, level, BossEvent.BossBarColor.YELLOW);
@@ -87,42 +97,74 @@ public class SamHyde extends HydeBoss {
         return result;
     }
 
+    // ------------------------------------------------------------------ phases
+
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
-        if (!introduced) {
-            introduced = true;
-            say("boss.hydemod.sam_hyde.intro");
+    protected void onIntro(ServerLevel level) {
+        playAnim(ANIM_INTRO);
+        showTitle(level, Component.translatable("title.hydemod.sam_hyde").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
+                Component.translatable("title.hydemod.sam_hyde.sub").withStyle(ChatFormatting.RED));
+        playBossSound(ModSounds.BOSS_INTRO.get(), 3.0F, 1.0F);
+        playBossSound(ModSounds.BOSS_APPLAUSE.get(), 3.0F, 1.0F);
+        say("boss.hydemod.sam_hyde.intro");
+    }
+
+    @Override
+    protected void onPhaseTwo(ServerLevel level) {
+        playAnim(ANIM_RESET);
+        showTitle(level, Component.translatable("title.hydemod.paradigm_shift").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+                Component.translatable("title.hydemod.paradigm_shift.sub").withStyle(ChatFormatting.GOLD));
+        playBossSound(ModSounds.BOSS_PHASE.get(), 3.0F, 1.0F);
+        say("boss.hydemod.sam_hyde.phase_two");
+        for (int i = 0; i < 4; i++) {
+            strikeVisualLightning(level, getX() + random.nextInt(9) - 4, getZ() + random.nextInt(9) - 4);
         }
-        if (!usedResetClock && getHealth() < getMaxHealth() * 0.25F) {
+        addEffect(new MobEffectInstance(MobEffects.SPEED, -1, 0, false, true));
+        addEffect(new MobEffectInstance(MobEffects.STRENGTH, -1, 0, false, true));
+        bossEvent.setColor(BossEvent.BossBarColor.PURPLE);
+        abilityCooldown = 40;
+    }
+
+    @Override
+    protected void bossTick(ServerLevel level) {
+        if (phaseTwo && tickCount % 3 == 0) {
+            level.sendParticles(ParticleTypes.ENCHANT, getX(), getY() + 1.2, getZ(), 4, 0.5, 0.8, 0.5, 0.6);
+        }
+        if (trashRainTicks > 0) {
+            tickTrashRain(level);
+        }
+        if (!usedResetClock && getHealth() < getMaxHealth() * 0.2F) {
             usedResetClock = true;
+            playAnim(ANIM_RESET);
             say("boss.hydemod.sam_hyde.reset_clock");
-            heal(getMaxHealth() * 0.3F);
-            addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20 * 10, 1));
+            heal(getMaxHealth() * 0.25F);
+            addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20 * 8, 1));
             level.playSound(null, blockPosition(), SoundEvents.BELL_BLOCK, SoundSource.HOSTILE, 3.0F, 0.8F);
-            abilityCooldown = 60;
+            level.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, getX(), getY() + 1, getZ(), 60, 0.5, 1.0, 0.5, 0.4);
+            abilityCooldown = 50;
             return;
         }
         LivingEntity target = getTarget();
-        if (target == null || !target.isAlive()) {
+        if (target == null || !target.isAlive() || --abilityCooldown > 0) {
             return;
         }
-        if (--abilityCooldown > 0) {
-            return;
-        }
-        boolean enraged = getHealth() < getMaxHealth() * 0.5F;
-        abilityCooldown = (enraged ? 60 : 90) + random.nextInt(40);
-        switch (random.nextInt(7)) {
-            case 0, 1 -> trashVolley(level, target, enraged ? 5 : 3);
+        abilityCooldown = (phaseTwo ? 50 : 85) + random.nextInt(35);
+        int roll = random.nextInt(phaseTwo ? 8 : 7);
+        switch (roll) {
+            case 0, 1 -> trashVolley(level, target, phaseTwo ? 6 : 3);
             case 2 -> closeYourEyes(level);
             case 3 -> summonGrovlers(level);
             case 4 -> maglev(level, target);
             case 5 -> bulletproofCoffee();
-            default -> patOnTheBack(level);
+            case 6 -> patOnTheBack(level);
+            default -> startTrashRain();
         }
     }
 
+    // ------------------------------------------------------------------ abilities
+
     private void trashVolley(ServerLevel level, LivingEntity target, int count) {
+        playAnim(ANIM_THROW);
         say("boss.hydemod.sam_hyde.trash");
         for (int i = 0; i < count; i++) {
             ThrownTrashCube cube = new ThrownTrashCube(level, this, new ItemStack(ModItems.TRASH_CUBE.get())).withDamage(7.0F);
@@ -136,11 +178,33 @@ public class SamHyde extends HydeBoss {
         level.playSound(null, blockPosition(), SoundEvents.SNOWBALL_THROW, SoundSource.HOSTILE, 1.0F, 0.5F);
     }
 
+    private void startTrashRain() {
+        playAnim(ANIM_RAIN);
+        say("boss.hydemod.sam_hyde.trash_rain");
+        trashRainTicks = 80;
+    }
+
+    private void tickTrashRain(ServerLevel level) {
+        trashRainTicks--;
+        if (trashRainTicks % 3 != 0) {
+            return;
+        }
+        for (Player player : level.getEntitiesOfClass(Player.class, getBoundingBox().inflate(24.0), HydeBoss::isFightable)) {
+            double x = player.getX() + random.nextGaussian() * 4.0;
+            double z = player.getZ() + random.nextGaussian() * 4.0;
+            ThrownTrashCube cube = new ThrownTrashCube(level, this, new ItemStack(ModItems.TRASH_CUBE.get())).withDamage(5.0F);
+            cube.setPos(x, player.getY() + 14 + random.nextInt(4), z);
+            cube.setDeltaMovement(0, -0.6, 0);
+            level.addFreshEntity(cube);
+        }
+    }
+
     private void closeYourEyes(ServerLevel level) {
+        playAnim(ANIM_CLOSE_EYES);
         say("boss.hydemod.sam_hyde.close_eyes");
-        for (Player player : level.getEntitiesOfClass(Player.class, getBoundingBox().inflate(20.0))) {
-            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 5, 0));
-            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 20 * 7, 0));
+        for (Player player : level.getEntitiesOfClass(Player.class, getBoundingBox().inflate(20.0), HydeBoss::isFightable)) {
+            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 4, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 20 * 6, 0));
         }
         level.playSound(null, blockPosition(), SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.HOSTILE, 1.0F, 1.2F);
     }
@@ -151,18 +215,21 @@ public class SamHyde extends HydeBoss {
             bulletproofCoffee();
             return;
         }
+        playAnim(ANIM_SUMMON);
         say("boss.hydemod.sam_hyde.grovlers");
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < (phaseTwo ? 5 : 3); i++) {
             BlockPos pos = blockPosition().offset(random.nextInt(7) - 3, 0, random.nextInt(7) - 3);
-            DepthGrovler growler = ModEntities.DEPTH_GROVLER.get().spawn(level, pos, EntitySpawnReason.MOB_SUMMONED);
-            if (growler != null) {
-                growler.setTarget(getTarget());
-                level.sendParticles(ParticleTypes.LARGE_SMOKE, growler.getX(), growler.getY() + 1, growler.getZ(), 15, 0.3, 0.6, 0.3, 0.02);
+            DepthGrovler grovler = ModEntities.DEPTH_GROVLER.get().spawn(level, pos, EntitySpawnReason.MOB_SUMMONED);
+            if (grovler != null) {
+                grovler.setTarget(getTarget());
+                level.sendParticles(ParticleTypes.LARGE_SMOKE, grovler.getX(), grovler.getY() + 0.5, grovler.getZ(), 15, 0.3, 0.3, 0.3, 0.02);
             }
         }
+        level.playSound(null, blockPosition(), SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.HOSTILE, 1.5F, 0.8F);
     }
 
     private void maglev(ServerLevel level, LivingEntity target) {
+        playAnim(ANIM_MAGLEV);
         say("boss.hydemod.sam_hyde.maglev");
         target.setDeltaMovement(target.getDeltaMovement().x, 1.6, target.getDeltaMovement().z);
         target.hurtMarked = true;
@@ -171,22 +238,36 @@ public class SamHyde extends HydeBoss {
     }
 
     private void bulletproofCoffee() {
+        playAnim(ANIM_COFFEE);
         say("boss.hydemod.sam_hyde.coffee");
         addEffect(new MobEffectInstance(MobEffects.SPEED, 20 * 8, 1));
-        addEffect(new MobEffectInstance(MobEffects.STRENGTH, 20 * 8, 0));
+        addEffect(new MobEffectInstance(MobEffects.STRENGTH, 20 * 8, phaseTwo ? 1 : 0));
         playSound(SoundEvents.GENERIC_DRINK.value(), 1.0F, 1.0F);
     }
 
     private void patOnTheBack(ServerLevel level) {
+        playAnim(ANIM_PAT);
         say("boss.hydemod.sam_hyde.pat");
-        heal(25.0F);
+        heal(phaseTwo ? 15.0F : 25.0F);
+        playBossSound(ModSounds.BOSS_APPLAUSE.get(), 2.0F, 1.1F);
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getY() + 1.5, getZ(), 20, 0.5, 0.6, 0.5, 0.0);
     }
 
+    private void strikeVisualLightning(ServerLevel level, double x, double z) {
+        LightningBolt bolt = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
+        if (bolt != null) {
+            bolt.snapTo(x, getY(), z);
+            bolt.setVisualOnly(true);
+            level.addFreshEntity(bolt);
+        }
+    }
+
+    // ------------------------------------------------------------------ combat
+
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        if (source.getDirectEntity() instanceof DepthGrovler) {
-            return false; // his own toilers can't hurt him
+        if (source.getDirectEntity() instanceof DepthGrovler || source.getDirectEntity() instanceof ThrownTrashCube && source.getEntity() == this) {
+            return false; // his own toilers and trash can't hurt him
         }
         boolean hurt = super.hurtServer(level, source, damage);
         if (hurt && random.nextInt(12) == 0 && isAlive()) {
@@ -198,6 +279,7 @@ public class SamHyde extends HydeBoss {
     @Override
     public void die(DamageSource source) {
         say("boss.hydemod.sam_hyde.death");
+        playBossSound(ModSounds.BOSS_APPLAUSE.get(), 4.0F, 0.9F);
         super.die(source);
     }
 
@@ -233,13 +315,11 @@ public class SamHyde extends HydeBoss {
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putBoolean("UsedResetClock", usedResetClock);
-        output.putBoolean("Introduced", introduced);
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         usedResetClock = input.getBooleanOr("UsedResetClock", false);
-        introduced = input.getBooleanOr("Introduced", false);
     }
 }

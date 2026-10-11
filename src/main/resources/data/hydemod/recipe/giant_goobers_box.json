@@ -9,10 +9,10 @@
   "key": {
     "G": "minecraft:gold_ingot",
     "O": "hydemod:goobers",
-    "A": "minecraft:apple"
+    "A": "minecraft:golden_apple"
   },
   "result": {
-    "id": "hydemod:elephant_fruit",
+    "id": "hydemod:giant_goobers_box",
     "count": 1
   }
 }

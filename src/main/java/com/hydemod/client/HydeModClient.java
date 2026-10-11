@@ -38,5 +38,6 @@ public final class HydeModClient {
     @SubscribeEvent
     static void onClientTick(ClientTickEvent.Post event) {
         LightsaberHumSound.tickAll();
+        BossMusic.tick();
     }
 }

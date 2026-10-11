@@ -14,7 +14,7 @@ def write_ogg(name, samples):
     with wave.open(path, "wb") as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes(data)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", path, "-c:a", "libvorbis", "-q:a", "5",
-                    os.path.join(OUT, name + ".ogg")], check=True)
+                    os.path.join(globals()["OUT"], name + ".ogg")], check=True)
     os.remove(path)
 
 def saw(phase):

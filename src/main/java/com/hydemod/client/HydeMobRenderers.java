@@ -5,13 +5,10 @@ import com.hydemod.entity.ElephantMario;
 import com.hydemod.entity.DepthGrovler;
 import com.hydemod.entity.SamHyde;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 
@@ -21,30 +18,36 @@ public final class HydeMobRenderers {
     public static final ModelLayerLocation ELEPHANT_MARIO_LAYER = new ModelLayerLocation(HydeMod.id("elephant_mario"), "main");
     public static final ModelLayerLocation DEPTH_GROVLER_LAYER = new ModelLayerLocation(HydeMod.id("depth_grovler"), "main");
 
-    public static class SamHydeRenderer extends HumanoidMobRenderer<SamHyde, HumanoidRenderState, HumanoidModel<HumanoidRenderState>> {
+    public static class SamHydeRenderer extends HumanoidMobRenderer<SamHyde, BossRenderStates.SamHydeState, SamHydeModel> {
         private static final Identifier TEXTURE = HydeMod.id("textures/entity/sam_hyde.png");
 
         public SamHydeRenderer(EntityRendererProvider.Context context) {
-            super(context, new HumanoidModel<>(context.bakeLayer(SAM_HYDE_LAYER), RenderTypes::entityTranslucent), 0.5F);
+            super(context, new SamHydeModel(context.bakeLayer(SAM_HYDE_LAYER)), 0.5F);
         }
 
         @Override
-        public HumanoidRenderState createRenderState() {
-            return new HumanoidRenderState();
+        public BossRenderStates.SamHydeState createRenderState() {
+            return new BossRenderStates.SamHydeState();
         }
 
         @Override
-        public Identifier getTextureLocation(HumanoidRenderState state) {
+        public void extractRenderState(SamHyde entity, BossRenderStates.SamHydeState state, float partialTicks) {
+            super.extractRenderState(entity, state, partialTicks);
+            BossRenderStates.copy(entity, partialTicks, state);
+        }
+
+        @Override
+        public Identifier getTextureLocation(BossRenderStates.SamHydeState state) {
             return TEXTURE;
         }
 
         @Override
-        protected void scale(HumanoidRenderState state, PoseStack poseStack) {
+        protected void scale(BossRenderStates.SamHydeState state, PoseStack poseStack) {
             poseStack.scale(1.08F, 1.08F, 1.08F); // he's a tall guy
         }
     }
 
-    public static class ElephantMarioRenderer extends MobRenderer<ElephantMario, LivingEntityRenderState, ElephantMarioModel> {
+    public static class ElephantMarioRenderer extends MobRenderer<ElephantMario, BossRenderStates.ElephantState, ElephantMarioModel> {
         private static final Identifier TEXTURE = HydeMod.id("textures/entity/elephant_mario.png");
 
         public ElephantMarioRenderer(EntityRendererProvider.Context context) {
@@ -52,17 +55,23 @@ public final class HydeMobRenderers {
         }
 
         @Override
-        public LivingEntityRenderState createRenderState() {
-            return new LivingEntityRenderState();
+        public BossRenderStates.ElephantState createRenderState() {
+            return new BossRenderStates.ElephantState();
         }
 
         @Override
-        public Identifier getTextureLocation(LivingEntityRenderState state) {
+        public void extractRenderState(ElephantMario entity, BossRenderStates.ElephantState state, float partialTicks) {
+            super.extractRenderState(entity, state, partialTicks);
+            BossRenderStates.copy(entity, partialTicks, state);
+        }
+
+        @Override
+        public Identifier getTextureLocation(BossRenderStates.ElephantState state) {
             return TEXTURE;
         }
 
         @Override
-        protected void scale(LivingEntityRenderState state, PoseStack poseStack) {
+        protected void scale(BossRenderStates.ElephantState state, PoseStack poseStack) {
             poseStack.scale(1.25F, 1.25F, 1.25F);
         }
     }
