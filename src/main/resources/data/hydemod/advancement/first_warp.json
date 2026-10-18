@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "id": "hydemod:pipe_wrench"
+    },
+    "title": {
+      "translate": "advancements.hydemod.first_warp.title"
+    },
+    "description": {
+      "translate": "advancements.hydemod.first_warp.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "travel": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "travel"
+    ]
+  ],
+  "parent": "hydemod:warp_network",
+  "rewards": {
+    "experience": 25
+  }
+}

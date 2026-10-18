@@ -32,6 +32,8 @@ public final class HydeModClient {
         event.registerEntityRenderer(ModEntities.SAM_HYDE.get(), HydeMobRenderers.SamHydeRenderer::new);
         event.registerEntityRenderer(ModEntities.ELEPHANT_MARIO.get(), HydeMobRenderers.ElephantMarioRenderer::new);
         event.registerEntityRenderer(ModEntities.DEPTH_GROVLER.get(), HydeMobRenderers.DepthGrovlerRenderer::new);
+        event.registerEntityRenderer(ModEntities.PETER_OHANRAHAN.get(), ctx -> new NewsReporterRenderer(ctx, "peter_ohanrahan"));
+        event.registerEntityRenderer(ModEntities.CHRIS_MORRIS.get(), ctx -> new NewsReporterRenderer(ctx, "chris_morris"));
         event.registerEntityRenderer(ModEntities.THROWN_TRASH_CUBE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.2F, false));
         event.registerEntityRenderer(ModEntities.TRUNK_SPRAY.get(), ctx -> new ThrownItemRenderer<>(ctx, 0.8F, true));
         event.registerEntityRenderer(ModEntities.THROWN_BOMB.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, false));

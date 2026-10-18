@@ -1072,7 +1072,7 @@ def main():
     for k in ("helmet", "chestplate", "leggings", "boots"):
         save(armor_icon(k), f"item/hyde_{k}.png")
     save(spawn_egg(hexc("26304a"), hexc("e62b1e")), "item/sam_hyde_spawn_egg.png")
-    save(spawn_egg(hexc("9a9aa6"), hexc("1f9e9a")), "item/elephant_mario_spawn_egg.png")
+    save(spawn_egg(hexc("245bc9"), hexc("e3342b")), "item/elephant_mario_spawn_egg.png")
     save(spawn_egg(hexc("8a4fd0"), hexc("2a0a44")), "item/goober_spawn_egg.png")
     save(spawn_egg(hexc("7d8c84"), hexc("d8ff3a")), "item/depth_growler_spawn_egg.png")
     # entities
@@ -1349,20 +1349,19 @@ def peanut_item():
     return outline(img, hexc("3a2410"))
 
 def elephant_v2():
-    """Original cartoon elephant plumber: blue-grey skin, pink ears, big eyes + heavy brows,
-    red cap with a gold star, white shirt, brown overalls with big gold buttons."""
+    """Elephant Mario: red cap and shirt, blue overalls, white gloves and a white M badge."""
     img = new(128, 128)
     skin = hexc("a9b4c8"); skin_dk = hexc("8591a8"); skin_hi = hexc("c4cddd"); pink = hexc("f2a7b8"); pink_dk = hexc("d98a9c")
-    cap = hexc("d8322f"); cap_dk = hexc("a8221f"); cap_hi = hexc("ee5a52"); star = hexc("ffd23a"); star_dk = hexc("d9a514")
-    shirt = hexc("f4f2ec"); shirt_dk = hexc("d8d4c8")
-    over = hexc("7a4a26"); over_dk = hexc("5c3519"); over_hi = hexc("925c32"); button = hexc("ffd23a"); button_dk = hexc("c99a12")
+    cap = hexc("d8322f"); cap_dk = hexc("a8221f"); cap_hi = hexc("ee5a52")
+    shirt = hexc("e3342b"); shirt_dk = hexc("b82123")
+    over = hexc("245bc9"); over_dk = hexc("153b8d"); over_hi = hexc("3982ec"); button = hexc("ffd23a"); button_dk = hexc("c99a12")
     white = hexc("ffffff"); black = hexc("15151c"); brow = hexc("3a3f4f"); iris = hexc("2b6fd6"); toenail = hexc("eeeae0")
 
     def skin_face(img, x0, y0, w, h, seed=0):
         noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.04, seed)
         for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), skin_dk)
 
-    # ---- body 18x16x12 @ (0,0): white shirt top, brown overalls with straps + big buttons
+    # ---- body 18x16x12 @ (0,0): red shirt top, blue overalls with straps + big buttons
     def body_face(img, x0, y0, w, h, front=False, back=False):
         noise_fill(img, (x0, y0, x0 + w, y0 + h), over, 0.05, 1)
         for y in range(y0, y0 + 5):
@@ -1384,7 +1383,11 @@ def elephant_v2():
                                    "right": body_face, "left": body_face, "top": solid(shirt, 0.03, 2), "bottom": solid(over_dk)})
     # ---- belly 14x10x2 @ (60,0): overalls bib with a front pocket
     def bib(img, x0, y0, w, h):
-        noise_fill(img, (x0, y0, x0 + w, y0 + h), over_hi, 0.04, 3)
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), over, 0.04, 3)
+        if w >= 10:
+            for bx in (x0 + 2, x0 + w - 4):
+                for dx in range(2):
+                    for dy in range(2): img.putpixel((bx + dx, y0 + dy), button)
         if w >= 10:
             for x in range(x0 + 4, x0 + w - 4):
                 img.putpixel((x, y0 + 3), over_dk); img.putpixel((x, y0 + 7), over_dk)
@@ -1411,22 +1414,15 @@ def elephant_v2():
         img.putpixel((x0 + 4, y0 + 9), skin_dk); img.putpixel((x0 + 9, y0 + 9), skin_dk)
     box_uv(img, 0, 28, 14, 12, 12, {"front": head_front, "default": lambda i, a, b, c, d: skin_face(i, a, b, c, d, 5),
                                     "top": solid(skin_hi, 0.04, 6)})
-    # ---- cap 15x4x13 @ (0,52) with a gold star on the front; brim 15x1x5 @ (56,52)
+    # ---- red cap 15x6x13 @ (0,52); brim 15x1x5 @ (56,52)
     def cap_front(img, x0, y0, w, h):
         noise_fill(img, (x0, y0, x0 + w, y0 + h), cap, 0.04, 7)
         for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), cap_dk)
-        cx = x0 + w // 2
-        star_px = ["..#..", "#####", ".###.", "#...#"]  # bold 5x4 star badge
-        for dy, row in enumerate(star_px):
-            for dx, ch in enumerate(row):
-                if ch == "#" and dy < h: img.putpixel((cx - 2 + dx, y0 + dy), star if dy < 2 else star_dk)
-        for dx in (-3, 3):  # dark outline so it pops on red
-            img.putpixel((cx + dx, y0 + 1), cap_dk)
     def cap_side(img, x0, y0, w, h):
         noise_fill(img, (x0, y0, x0 + w, y0 + h), cap, 0.04, 8)
         for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), cap_dk)
         for x in range(x0, x0 + w, 3): img.putpixel((x, y0), cap_hi)
-    box_uv(img, 0, 52, 15, 4, 13, {"front": cap_front, "default": cap_side, "top": solid(cap_hi, 0.06, 9)})
+    box_uv(img, 0, 52, 15, 6, 13, {"front": cap_front, "default": cap_side, "top": solid(cap_hi, 0.06, 9)})
     box_uv(img, 56, 52, 15, 1, 5, {"default": solid(cap_dk, 0.04, 10), "top": solid(cap, 0.04, 11)})
     # ---- ears 1x12x10 @ (92,0): pink inside
     def ear(img, x0, y0, w, h):
@@ -1442,18 +1438,19 @@ def elephant_v2():
         for y in range(y0 + 1, y0 + h, 2):
             for x in range(x0, x0 + w): img.putpixel((x, y), skin_dk)
     box_uv(img, 60, 12, 5, 5, 5, {"default": trunk})
-    box_uv(img, 80, 12, 4, 5, 4, {"default": trunk})
-    box_uv(img, 96, 22, 3, 5, 3, {"default": trunk})
+    box_uv(img, 80, 80, 4, 5, 4, {"default": trunk})
+    box_uv(img, 96, 80, 3, 5, 3, {"default": trunk})
     box_uv(img, 108, 22, 4, 2, 4, {"default": solid(skin_hi, 0.03, 14), "bottom": solid(pink_dk)})
     box_uv(img, 116, 0, 1, 1, 3, {"default": solid(hexc("f6f1e0"), 0.02, 15)})
-    # ---- arms 6x13x6 @ (60,28): white puffy sleeves, grey arms, round hands
+    # ---- arms 6x13x6 @ (60,28): red sleeves and white gloves
     def arm(img, x0, y0, w, h):
         noise_fill(img, (x0, y0, x0 + w, y0 + h), skin, 0.04, 16)
-        for y in range(y0, y0 + 5):
-            for x in range(x0, x0 + w): img.putpixel((x, y), shirt if y < y0 + 4 else shirt_dk)
-        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 1), skin_dk)
-    box_uv(img, 60, 28, 6, 13, 6, {"default": arm, "top": solid(shirt), "bottom": solid(skin_hi)})
-    # ---- legs 7x9x7 @ (84,28): brown overall legs, big round grey feet with toenails
+        for y in range(y0, y0 + h):
+            for x in range(x0, x0 + w):
+                img.putpixel((x, y), shirt if y < y0 + h - 5 else white)
+        for x in range(x0, x0 + w): img.putpixel((x, y0 + h - 5), hexc("d9dfec"))
+    box_uv(img, 60, 28, 6, 13, 6, {"default": arm, "top": solid(shirt), "bottom": solid(white)})
+    # ---- legs 7x9x7 @ (84,28): blue overall legs, big round grey feet with toenails
     def leg(img, x0, y0, w, h):
         noise_fill(img, (x0, y0, x0 + w, y0 + h), over, 0.05, 17)
         for x in range(x0, x0 + w):
@@ -1462,6 +1459,15 @@ def elephant_v2():
         if w == 7:
             for x in (x0 + 1, x0 + 3, x0 + 5): img.putpixel((x, y0 + h - 1), toenail)
     box_uv(img, 84, 28, 7, 9, 7, {"default": leg, "top": solid(over), "bottom": solid(skin_dk)})
+    # Dedicated badge and moustache UVs avoid the old trunk/leg overlap.
+    def badge(img, x0, y0, w, h):
+        noise_fill(img, (x0, y0, x0 + w, y0 + h), white, 0.01, 2070)
+        if w == 5 and h == 5:
+            for dy, row in enumerate([".www.", "wrwrw", "wrrrw", "wrwrw", ".www."]):
+                for dx, ch in enumerate(row):
+                    img.putpixel((x0 + dx, y0 + dy), white if ch == "w" else cap)
+    box_uv(img, 104, 66, 5, 5, 1, {"default": badge})
+    box_uv(img, 64, 72, 12, 2, 2, {"default": solid(hexc("33231e"), 0.04, 2071)})
     return img
 
 def main_v11():
@@ -1634,7 +1640,7 @@ def effect_icons():
     return big, star
 
 def call_portrait():
-    """64x64 portrait of HydeMod's own Elephant Mario: red star cap, big eyes, rosy cheeks, curly trunk."""
+    """64x64 portrait of HydeMod's own Elephant Mario: red M cap, blue overalls, big eyes and curly trunk."""
     img = Image.new("RGBA", (64, 64), hexc("4a9ad8"))
     from PIL import ImageDraw
     d = ImageDraw.Draw(img)
@@ -1645,13 +1651,17 @@ def call_portrait():
     d.ellipse([44, 18, 62, 44], fill=skin, outline=skin_dk); d.ellipse([47, 22, 58, 40], fill=pink)
     d.ellipse([12, 14, 52, 58], fill=skin, outline=skin_dk)                                          # head
     d.rectangle([12, 10, 52, 20], fill=hexc("d8322f")); d.rectangle([10, 19, 54, 22], fill=hexc("a8221f"))  # red cap + brim
-    d.polygon([(32, 11), (34, 15), (38, 15), (35, 17), (36, 20), (32, 18), (28, 20), (29, 17), (26, 15), (30, 15)], fill=hexc("ffd23a"))
+    d.rectangle([10, 54, 54, 63], fill=hexc("e3342b"))
+    d.rectangle([18, 55, 46, 63], fill=hexc("245bc9"))
+    d.ellipse([26, 9, 38, 21], fill=hexc("ffffff"))
+    d.line([(28, 18), (28, 12), (32, 16), (36, 12), (36, 18)], fill=hexc("d8322f"), width=2)
     for ex in (20, 36):                                                                              # big eyes + heavy brows
         d.ellipse([ex, 25, ex + 9, 36], fill=hexc("ffffff"), outline=hexc("3a3f4f"))
         d.ellipse([ex + 3, 28, ex + 8, 35], fill=hexc("2b6fd6")); d.rectangle([ex + 5, 30, ex + 6, 33], fill=hexc("15151c"))
         d.point((ex + 4, 29), fill=hexc("ffffff"))
     d.line([(19, 23), (29, 25)], fill=hexc("3a3f4f"), width=2); d.line([(35, 25), (45, 23)], fill=hexc("3a3f4f"), width=2)
     d.ellipse([16, 38, 22, 42], fill=pink); d.ellipse([42, 38, 48, 42], fill=pink)                    # cheeks
+    d.ellipse([22, 36, 32, 40], fill=hexc("33231e")); d.ellipse([32, 36, 42, 40], fill=hexc("33231e"))
     trunk = [(32, 36), (31, 44), (30, 50), (33, 56), (39, 58), (43, 55), (41, 52)]                 # curly trunk
     d.line(trunk, fill=skin_dk, width=8); d.line(trunk, fill=skin, width=6)
     d.ellipse([38, 50, 45, 56], fill=skin, outline=skin_dk); d.point((41, 53), fill=pink)

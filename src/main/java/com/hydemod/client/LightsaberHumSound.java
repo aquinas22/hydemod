@@ -68,11 +68,11 @@ public class LightsaberHumSound extends AbstractTickableSoundInstance {
         x = holder.getX();
         y = holder.getY() + 1.0;
         z = holder.getZ();
-        float turn = Math.abs(holder.getYRot() - lastYaw);
+        float turn = Math.abs(net.minecraft.util.Mth.wrapDegrees(holder.getYRot() - lastYaw));
         lastYaw = holder.getYRot();
         double speed = holder.getDeltaMovement().horizontalDistance();
         float motion = Math.min(1.0F, turn / 25.0F + (float) speed * 2.0F + (holder.swinging ? 0.6F : 0.0F));
-        float targetVolume = 0.45F + 0.4F * motion;
+        float targetVolume = 0.22F + 0.2F * motion;
         volume += (targetVolume - volume) * 0.35F;
         pitch = 1.0F + 0.18F * motion;
 

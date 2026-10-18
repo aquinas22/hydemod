@@ -10,7 +10,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import com.hydemod.entity.ElephantMario;
 import net.minecraft.util.Mth;
 
-/** A big upright elephant in a knit cap and work overalls, with flappy ears and a swinging trunk. */
+/** Elephant Mario's red cap, red sleeves, blue overalls, gloves and articulated trunk. */
 public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantState> {
     private final ModelPart body;
     private final ModelPart head;
@@ -49,20 +49,24 @@ public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantSta
                 PartPose.offset(0.0F, 15.0F, 0.0F));
         PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create()
                         .texOffs(0, 28).addBox(-7.0F, -12.0F, -7.0F, 14.0F, 12.0F, 12.0F)
-                        .texOffs(0, 52).addBox(-7.5F, -15.0F, -7.5F, 15.0F, 4.0F, 13.0F)   // cap crown
-                        .texOffs(56, 52).addBox(-7.5F, -12.0F, -12.0F, 15.0F, 1.0F, 5.0F)  // cap brim
-                        .texOffs(116, 0).addBox(-5.5F, -3.0F, -9.0F, 1.0F, 1.0F, 3.0F)     // tusks
-                        .texOffs(116, 0).addBox(4.5F, -3.0F, -9.0F, 1.0F, 1.0F, 3.0F),
+                        .texOffs(0, 52).addBox(-7.5F, -17.0F, -7.5F, 15.0F, 6.0F, 13.0F)   // cap crown
+                        .texOffs(56, 52).addBox(-7.5F, -12.0F, -12.0F, 15.0F, 1.0F, 5.0F), // cap brim
                 PartPose.offset(0.0F, -1.0F, -2.0F));
+        head.addOrReplaceChild("cap_badge", CubeListBuilder.create().texOffs(104, 66)
+                        .addBox(-2.5F, -2.5F, -0.5F, 5.0F, 5.0F, 1.0F),
+                PartPose.offset(0.0F, -14.5F, -7.8F));
+        head.addOrReplaceChild("mustache", CubeListBuilder.create().texOffs(64, 72)
+                        .addBox(-6.0F, -1.0F, -1.0F, 12.0F, 2.0F, 2.0F),
+                PartPose.offset(0.0F, -3.7F, -7.3F));
         head.addOrReplaceChild("left_ear", CubeListBuilder.create().texOffs(92, 0).addBox(0.0F, -6.0F, 0.0F, 1.0F, 12.0F, 10.0F),
-                PartPose.offsetAndRotation(6.5F, -7.0F, -3.0F, 0.0F, -0.55F, 0.0F));
+                PartPose.offsetAndRotation(6.5F, -7.0F, -3.0F, 0.0F, 0.95F, 0.0F));
         head.addOrReplaceChild("right_ear", CubeListBuilder.create().texOffs(92, 0).mirror().addBox(-1.0F, -6.0F, 0.0F, 1.0F, 12.0F, 10.0F),
-                PartPose.offsetAndRotation(-6.5F, -7.0F, -3.0F, 0.0F, 0.55F, 0.0F));
+                PartPose.offsetAndRotation(-6.5F, -7.0F, -3.0F, 0.0F, -0.95F, 0.0F));
         PartDefinition trunk = head.addOrReplaceChild("trunk", CubeListBuilder.create().texOffs(60, 12).addBox(-2.5F, 0.0F, -2.5F, 5.0F, 5.0F, 5.0F),
                 PartPose.offsetAndRotation(0.0F, -5.0F, -8.0F, -0.2F, 0.0F, 0.0F));
-        PartDefinition mid = trunk.addOrReplaceChild("trunk_mid", CubeListBuilder.create().texOffs(80, 12).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 5.0F, 4.0F),
+        PartDefinition mid = trunk.addOrReplaceChild("trunk_mid", CubeListBuilder.create().texOffs(80, 80).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 5.0F, 4.0F),
                 PartPose.offsetAndRotation(0.0F, 4.5F, 0.0F, -0.3F, 0.0F, 0.0F));
-        PartDefinition tip = mid.addOrReplaceChild("trunk_tip", CubeListBuilder.create().texOffs(96, 22).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 5.0F, 3.0F),
+        PartDefinition tip = mid.addOrReplaceChild("trunk_tip", CubeListBuilder.create().texOffs(96, 80).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 5.0F, 3.0F),
                 PartPose.offsetAndRotation(0.0F, 4.5F, 0.0F, -0.5F, 0.0F, 0.0F));
         tip.addOrReplaceChild("trunk_nose", CubeListBuilder.create().texOffs(108, 22).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 2.0F, 4.0F),
                 PartPose.offset(0.0F, 4.5F, 0.0F));
@@ -98,8 +102,8 @@ public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantSta
         leftArm.zRot = -0.18F - Mth.sin(t * 0.07F) * 0.05F;
         // Floppy ears and a trunk that curls up at the end and swings with every step.
         float flap = Mth.sin(t * 0.15F) * 0.18F + speed * 0.35F;
-        leftEar.yRot = -0.55F - flap;
-        rightEar.yRot = 0.55F + flap;
+        leftEar.yRot = 0.95F + flap;
+        rightEar.yRot = -0.95F - flap;
         leftEar.zRot = -Mth.sin(t * 0.11F) * 0.06F;
         rightEar.zRot = Mth.sin(t * 0.11F) * 0.06F;
         float curl = Mth.sin(t * 0.09F) * 0.15F;
@@ -119,7 +123,7 @@ public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantSta
             float k = Mth.sin(Math.min(1, u * 1.3F) * Mth.PI);
             rightArm.xRot = -2.8F * k; leftArm.xRot = -2.8F * k;
             trunk.xRot = -2.4F * k; trunkMid.xRot = -0.6F * k; trunkTip.xRot = -0.9F * k;
-            leftEar.yRot = -1.3F * k - 0.6F * (1 - k); rightEar.yRot = 1.3F * k + 0.6F * (1 - k);
+            leftEar.yRot = 1.3F * k + 0.95F * (1 - k); rightEar.yRot = -1.3F * k - 0.95F * (1 - k);
             head.xRot = -0.4F * k;
             return;
         }
@@ -133,7 +137,7 @@ public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantSta
                 rightLeg.xRot = Mth.lerp(e * up, rightLeg.xRot, -0.6F);
                 leftLeg.xRot = Mth.lerp(e * up, leftLeg.xRot, -0.6F);
                 trunk.xRot = Mth.lerp(e, trunk.xRot, -1.2F * up);
-                leftEar.yRot -= e * 0.7F; rightEar.yRot += e * 0.7F;
+                leftEar.yRot += e * 0.7F; rightEar.yRot -= e * 0.7F;
             }
             case ElephantMario.ANIM_SPRAY -> { // trunk levelled straight at you like a hose, recoiling
                 e = BossRenderStates.envelope(at, 25);
@@ -141,7 +145,7 @@ public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantSta
                 trunk.xRot = Mth.lerp(e, trunk.xRot, -1.55F + recoil);
                 trunkTip.xRot = Mth.lerp(e, trunkTip.xRot, 0.0F);
                 head.xRot = Mth.lerp(e, head.xRot, -0.15F);
-                leftEar.yRot -= e * 0.5F; rightEar.yRot += e * 0.5F;
+                leftEar.yRot += e * 0.5F; rightEar.yRot -= e * 0.5F;
             }
             case ElephantMario.ANIM_THROW -> { // big overhand candy toss with the right arm
                 e = BossRenderStates.envelope(at, 16);
@@ -151,19 +155,19 @@ public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantSta
                 head.yRot += e * (at < 7 ? 0.2F : -0.2F);
             }
             case ElephantMario.ANIM_SNACK -> { // hand to mouth, trunk curled, happy ear flaps
-                e = BossRenderStates.envelope(at, 40);
+                e = BossRenderStates.envelope(at, 55);
                 rightArm.xRot = Mth.lerp(e, rightArm.xRot, -2.1F + Mth.sin(age * 1.3F) * 0.15F);
                 rightArm.yRot = e * 0.5F;
                 trunk.xRot = Mth.lerp(e, trunk.xRot, -2.0F);
                 trunkTip.xRot = Mth.lerp(e, trunkTip.xRot, -1.2F);
-                leftEar.yRot -= e * Mth.sin(age * 0.8F) * 0.4F; rightEar.yRot += e * Mth.sin(age * 0.8F) * 0.4F;
+                leftEar.yRot += e * Mth.sin(age * 0.8F) * 0.4F; rightEar.yRot -= e * Mth.sin(age * 0.8F) * 0.4F;
             }
             case ElephantMario.ANIM_CHARGE -> { // head down, trunk forward, arms back
-                e = BossRenderStates.envelope(at, 20);
+                e = BossRenderStates.envelope(at, 45);
                 head.xRot = Mth.lerp(e, head.xRot, 0.6F);
                 trunk.xRot = Mth.lerp(e, trunk.xRot, -1.0F);
                 rightArm.xRot = Mth.lerp(e, rightArm.xRot, 0.9F); leftArm.xRot = Mth.lerp(e, leftArm.xRot, 0.9F);
-                leftEar.yRot -= e * 1.0F; rightEar.yRot += e * 1.0F;
+                leftEar.yRot += e * 1.0F; rightEar.yRot -= e * 1.0F;
             }
             case ElephantMario.ANIM_ROAR -> { // phase two: rears up and roars, shaking
                 e = BossRenderStates.envelope(at, 50);
@@ -172,13 +176,13 @@ public class ElephantMarioModel extends EntityModel<BossRenderStates.ElephantSta
                 rightArm.zRot = e * 0.6F; leftArm.zRot = -e * 0.6F;
                 trunk.xRot = Mth.lerp(e, trunk.xRot, -2.6F); trunkTip.xRot = Mth.lerp(e, trunkTip.xRot, -1.0F);
                 head.xRot = Mth.lerp(e, head.xRot, -0.5F);
-                leftEar.yRot = Mth.lerp(e, leftEar.yRot, -1.4F); rightEar.yRot = Mth.lerp(e, rightEar.yRot, 1.4F);
+                leftEar.yRot = Mth.lerp(e, leftEar.yRot, 1.4F); rightEar.yRot = Mth.lerp(e, rightEar.yRot, -1.4F);
             }
             default -> { }
         }
         if (s.phaseTwo) {
             float huff = Mth.sin(age * 0.5F) * 0.05F;
-            leftEar.yRot -= 0.2F + huff; rightEar.yRot += 0.2F + huff;
+            leftEar.yRot += 0.2F + huff; rightEar.yRot -= 0.2F + huff;
         }
     }
 }

@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "id": "hydemod:warp_pipe"
+    },
+    "title": {
+      "translate": "advancements.hydemod.warp_network.title"
+    },
+    "description": {
+      "translate": "advancements.hydemod.warp_network.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "pipe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hydemod:warp_pipe"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "pipe"
+    ]
+  ],
+  "parent": "hydemod:root"
+}

@@ -42,6 +42,26 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(HydeMod.MODID);
 
+    // ---------------------------------------------------------------- The Day Today newsroom
+    public static final DeferredItem<com.hydemod.item.PressPassItem> PRESS_PASS = ITEMS.registerItem("day_today_press_pass",
+            com.hydemod.item.PressPassItem::new, p -> p.stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<com.hydemod.item.NewsPropItem> STRETCHED_TWIG_OF_PEACE = newsProp("stretched_twig_of_peace",
+            com.hydemod.item.NewsPropItem.Kind.TWIG, p -> p.durability(160).rarity(Rarity.RARE));
+    public static final DeferredItem<com.hydemod.item.NewsPropItem> SATELLITE_INFOMOMETER = newsProp("satellite_infomometer",
+            com.hydemod.item.NewsPropItem.Kind.INFOMOMETER, p -> p.stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<com.hydemod.item.NewsPropItem> NEWS_MICROPHONE = newsProp("news_microphone",
+            com.hydemod.item.NewsPropItem.Kind.MICROPHONE, p -> p.stacksTo(1));
+    public static final DeferredItem<com.hydemod.item.NewsPropItem> FACT_BOMB = newsProp("fact_bomb",
+            com.hydemod.item.NewsPropItem.Kind.FACT_BOMB, p -> p.stacksTo(16));
+    public static final DeferredItem<com.hydemod.item.NewsPropItem> THIS_IS_OUR_WAR = newsProp("this_is_our_war",
+            com.hydemod.item.NewsPropItem.Kind.ARCHIVE, p -> p.stacksTo(1));
+    public static final DeferredItem<com.hydemod.item.NewsPropItem> UNVERIFIED_REPORT = newsProp("unverified_report",
+            com.hydemod.item.NewsPropItem.Kind.REPORT, p -> p.stacksTo(16));
+    public static final DeferredItem<SpawnEggItem> PETER_OHANRAHAN_SPAWN_EGG = ITEMS.registerItem("peter_ohanrahan_spawn_egg",
+            SpawnEggItem::new, p -> p.spawnEgg(ModEntities.PETER_OHANRAHAN.get()));
+    public static final DeferredItem<SpawnEggItem> CHRIS_MORRIS_SPAWN_EGG = ITEMS.registerItem("chris_morris_spawn_egg",
+            SpawnEggItem::new, p -> p.spawnEgg(ModEntities.CHRIS_MORRIS.get()));
+
     // ---------------------------------------------------------------- 2070 Paradigm Shift
     public static final DeferredItem<TrashCubeItem> TRASH_CUBE = ITEMS.registerItem("trash_cube", TrashCubeItem::new, p -> p.stacksTo(64));
     public static final DeferredItem<Item> NEOPLAS_NUGGET = ITEMS.registerSimpleItem("neoplas_nugget");
@@ -252,6 +272,11 @@ public final class ModItems {
     private static DeferredItem<LightsaberItem> lightsaber(KyberColor color) {
         return ITEMS.registerItem(color.getSerializedName() + "_lightsaber", p -> new LightsaberItem(p, color),
                 p -> LightsaberItem.properties(p, color));
+    }
+
+    private static DeferredItem<com.hydemod.item.NewsPropItem> newsProp(String id, com.hydemod.item.NewsPropItem.Kind kind,
+            java.util.function.UnaryOperator<Item.Properties> properties) {
+        return ITEMS.registerItem(id, p -> new com.hydemod.item.NewsPropItem(p, kind), properties);
     }
 
     private static Map<ArmorType, Integer> defense(int boots, int legs, int chest, int helm, int body) {

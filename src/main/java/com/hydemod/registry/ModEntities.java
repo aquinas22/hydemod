@@ -14,6 +14,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModEntities {
     public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(HydeMod.MODID);
 
+    public static final DeferredHolder<EntityType<?>, EntityType<com.hydemod.entity.NewsReporter>> PETER_OHANRAHAN = ENTITIES.registerEntityType(
+            "peter_ohanrahan", com.hydemod.entity.NewsReporter::new, MobCategory.CREATURE, b -> b.sized(.6F, 1.8F).eyeHeight(1.65F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<com.hydemod.entity.NewsReporter>> CHRIS_MORRIS = ENTITIES.registerEntityType(
+            "chris_morris", com.hydemod.entity.NewsReporter::new, MobCategory.CREATURE, b -> b.sized(.6F, 1.8F).eyeHeight(1.65F).clientTrackingRange(8));
+
     public static final DeferredHolder<EntityType<?>, EntityType<SamHyde>> SAM_HYDE = ENTITIES.registerEntityType("sam_hyde", SamHyde::new, MobCategory.MONSTER,
             b -> b.sized(0.6F, 2.1F).eyeHeight(1.9F).clientTrackingRange(10).fireImmune());
     public static final DeferredHolder<EntityType<?>, EntityType<ElephantMario>> ELEPHANT_MARIO = ENTITIES.registerEntityType("elephant_mario", ElephantMario::new, MobCategory.MONSTER,

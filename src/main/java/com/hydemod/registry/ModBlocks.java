@@ -41,7 +41,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(1.0F).sound(SoundType.WET_GRASS));
 
     public static final DeferredBlock<WarpPipeBlock> WARP_PIPE = BLOCKS.registerBlock("warp_pipe", WarpPipeBlock::new,
-            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(3.0F, 6.0F).sound(SoundType.METAL).noOcclusion());
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).strength(3.0F, 6.0F).sound(SoundType.METAL)
+                    .lightLevel(s -> s.getValue(WarpPipeBlock.LINKED) ? 7 : 0).noOcclusion());
     public static final DeferredBlock<ChargingStationBlock> CHARGING_STATION = BLOCKS.registerBlock("charging_station", ChargingStationBlock::new,
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.5F, 6.0F).sound(SoundType.METAL).lightLevel(s -> 4));
 

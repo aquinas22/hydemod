@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 @EventBusSubscriber(modid = HydeMod.MODID)
 public final class CommonEvents {
@@ -41,6 +42,8 @@ public final class CommonEvents {
         event.put(ModEntities.SAM_HYDE.get(), SamHyde.createAttributes().build());
         event.put(ModEntities.ELEPHANT_MARIO.get(), ElephantMario.createAttributes().build());
         event.put(ModEntities.DEPTH_GROVLER.get(), DepthGrovler.createAttributes().build());
+        event.put(ModEntities.PETER_OHANRAHAN.get(), com.hydemod.entity.NewsReporter.attributes().build());
+        event.put(ModEntities.CHRIS_MORRIS.get(), com.hydemod.entity.NewsReporter.attributes().build());
     }
 
     @SubscribeEvent
@@ -51,9 +54,14 @@ public final class CommonEvents {
 
     @SubscribeEvent
     static void onCapabilities(RegisterCapabilitiesEvent event) {
-        // Lightsabers accept Redstone Flux from any mod's charger.
+        // Charged forever; keep the capability visible to chargers without consuming or exporting FE.
         event.registerItem(Capabilities.Energy.ITEM,
-                (stack, access) -> new ItemAccessEnergyHandler(access, ModComponents.ENERGY.get(), LightsaberItem.CAPACITY, LightsaberItem.MAX_TRANSFER),
+                (stack, access) -> new ItemAccessEnergyHandler(access, ModComponents.ENERGY.get(), LightsaberItem.CAPACITY, 0, 0) {
+                    @Override
+                    protected int getAmountFrom(ItemResource resource) {
+                        return resource.is(validItem) ? LightsaberItem.CAPACITY : 0;
+                    }
+                },
                 ModItems.GREEN_LIGHTSABER.get(), ModItems.BLUE_LIGHTSABER.get(), ModItems.RED_LIGHTSABER.get(), ModItems.PURPLE_LIGHTSABER.get());
         // The charging station accepts FE from cables/generators on every side.
         event.registerBlockEntity(Capabilities.Energy.BLOCK, ModBlockEntities.CHARGING_STATION.get(), (be, side) -> be.getEnergy());
@@ -125,6 +133,8 @@ public final class CommonEvents {
                 WarpPipeBlock.tryWarpFromInside(level, feet, player);
             } else if (level.getBlockState(feet.below()).is(ModBlocks.WARP_PIPE.get()) && player.onGround()) {
                 WarpPipeBlock.tryWarpFromInside(level, feet.below(), player);
+            } else {
+                WarpPipeBlock.cancelCharge(player);
             }
         }
     }

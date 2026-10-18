@@ -1,0 +1,141 @@
+{
+  "display": {
+    "icon": {
+      "id": "hydemod:tedx_invitation"
+    },
+    "title": {
+      "translate": "advancements.hydemod.root.title"
+    },
+    "description": {
+      "translate": "advancements.hydemod.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "background": "minecraft:gui/advancements/backgrounds/adventure"
+  },
+  "criteria": {
+    "mod_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hydemod:blaze_blossom",
+              "hydemod:blue_kyber_crystal",
+              "hydemod:blue_lightsaber",
+              "hydemod:bomb",
+              "hydemod:bulletproof_coffee",
+              "hydemod:butterscotch_brew",
+              "hydemod:charging_station",
+              "hydemod:chrono_pendant",
+              "hydemod:deepslate_blue_kyber_ore",
+              "hydemod:depth_grovler_spawn_egg",
+              "hydemod:einstein_parable",
+              "hydemod:elephant_fruit",
+              "hydemod:elephant_mario_spawn_egg",
+              "hydemod:elven_blade",
+              "hydemod:elven_waybread",
+              "hydemod:end_purple_kyber_ore",
+              "hydemod:flip_charm",
+              "hydemod:flying_broom",
+              "hydemod:giant_goobers_box",
+              "hydemod:goobers",
+              "hydemod:grappling_hook",
+              "hydemod:green_kyber_crystal",
+              "hydemod:green_kyber_ore",
+              "hydemod:green_lightsaber",
+              "hydemod:healing_butterfly",
+              "hydemod:healing_cordial",
+              "hydemod:heart_vessel",
+              "hydemod:hyde_boots",
+              "hydemod:hyde_chestplate",
+              "hydemod:hyde_helmet",
+              "hydemod:hyde_leggings",
+              "hydemod:invincibility_star",
+              "hydemod:invisibility_cloak",
+              "hydemod:lamp_post",
+              "hydemod:lightsaber_hilt",
+              "hydemod:maglev_moon_launcher",
+              "hydemod:mind_upload_blackberry",
+              "hydemod:mithril_mail",
+              "hydemod:moment_stopwatch",
+              "hydemod:neoplas_block",
+              "hydemod:neoplas_ingot",
+              "hydemod:neoplas_nugget",
+              "hydemod:nether_red_kyber_ore",
+              "hydemod:ocarina",
+              "hydemod:paradigm_shift_core",
+              "hydemod:pat_on_the_back",
+              "hydemod:peanut",
+              "hydemod:pipe_wrench",
+              "hydemod:power_mushroom",
+              "hydemod:purple_kyber_crystal",
+              "hydemod:purple_lightsaber",
+              "hydemod:red_kyber_crystal",
+              "hydemod:red_lightsaber",
+              "hydemod:reflector_badge",
+              "hydemod:reset_the_clock",
+              "hydemod:ring_of_unseeing",
+              "hydemod:sam_hyde_spawn_egg",
+              "hydemod:sea_beet",
+              "hydemod:sea_cabbage",
+              "hydemod:sea_cheesy_baked_potato",
+              "hydemod:sea_salad",
+              "hydemod:sea_yam",
+              "hydemod:slugger_bat",
+              "hydemod:soda",
+              "hydemod:soda_stream",
+              "hydemod:spin_hammer",
+              "hydemod:star_phial",
+              "hydemod:stone_spell_wand",
+              "hydemod:super_peanut",
+              "hydemod:ted_microphone",
+              "hydemod:tedx_invitation",
+              "hydemod:trash_cube",
+              "hydemod:trash_cube_block",
+              "hydemod:turkish_delight",
+              "hydemod:warp_pipe",
+              "hydemod:wizard_wand"
+            ]
+          }
+        ]
+      }
+    },
+    "sam": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "minecraft:entity_type": "hydemod:sam_hyde"
+            }
+          }
+        ]
+      }
+    },
+    "elephant": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "minecraft:entity_type": "hydemod:elephant_mario"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "mod_item",
+      "sam",
+      "elephant"
+    ]
+  ]
+}

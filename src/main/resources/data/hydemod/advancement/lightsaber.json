@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "hydemod:blue_lightsaber"
+    },
+    "title": {
+      "translate": "advancements.hydemod.lightsaber.title"
+    },
+    "description": {
+      "translate": "advancements.hydemod.lightsaber.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "saber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hydemod:green_lightsaber",
+              "hydemod:blue_lightsaber",
+              "hydemod:red_lightsaber",
+              "hydemod:purple_lightsaber"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "saber"
+    ]
+  ],
+  "parent": "hydemod:root"
+}

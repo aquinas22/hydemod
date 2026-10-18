@@ -12,6 +12,7 @@ import org.jspecify.annotations.Nullable;
 /** Remembers which warp pipe this one is linked to. */
 public class WarpPipeBlockEntity extends BlockEntity {
     private @Nullable GlobalPos target;
+    private boolean launchExit = true;
 
     public WarpPipeBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.WARP_PIPE.get(), pos, state);
@@ -24,17 +25,34 @@ public class WarpPipeBlockEntity extends BlockEntity {
     public void setTarget(@Nullable GlobalPos target) {
         this.target = target;
         setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.setBlock(worldPosition, getBlockState().setValue(WarpPipeBlock.LINKED, target != null), 3);
+        }
+    }
+
+    public boolean isLaunchExit() { return launchExit; }
+
+    public void setLaunchExit(boolean launch) { launchExit = launch; setChanged(); }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (level != null && !level.isClientSide() && getBlockState().getValue(WarpPipeBlock.LINKED) != (target != null)) {
+            level.setBlock(worldPosition, getBlockState().setValue(WarpPipeBlock.LINKED, target != null), 3);
+        }
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         target = input.read("target", GlobalPos.CODEC).orElse(null);
+        launchExit = input.getBooleanOr("LaunchExit", true);
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.storeNullable("target", GlobalPos.CODEC, target);
+        output.putBoolean("LaunchExit", launchExit);
     }
 }

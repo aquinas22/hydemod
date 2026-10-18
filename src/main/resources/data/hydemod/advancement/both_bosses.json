@@ -1,0 +1,58 @@
+{
+  "display": {
+    "icon": {
+      "id": "hydemod:super_peanut"
+    },
+    "title": {
+      "translate": "advancements.hydemod.both_bosses.title"
+    },
+    "description": {
+      "translate": "advancements.hydemod.both_bosses.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "sam": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "minecraft:entity_type": "hydemod:sam_hyde"
+            }
+          }
+        ]
+      }
+    },
+    "elephant": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "minecraft:entity_type": "hydemod:elephant_mario"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "sam"
+    ],
+    [
+      "elephant"
+    ]
+  ],
+  "parent": "hydemod:defeat_sam",
+  "rewards": {
+    "experience": 150
+  }
+}

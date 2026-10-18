@@ -38,5 +38,7 @@ run/
 **/src/generated/**/.cache/
 repo/
 !**/src/**/repo/
+__pycache__/
+*.pyc
 runs/
 dist/

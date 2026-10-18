@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "ingredient": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:paper"
+            ]
+          }
+        ]
+      }
+    },
+    "recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hydemod:this_is_our_war"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ingredient",
+      "recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hydemod:this_is_our_war"
+    ]
+  }
+}

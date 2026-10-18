@@ -108,5 +108,320 @@
         "stream": true
       }
     ]
+  },
+  "sam.voice.intro": {
+    "subtitle": "subtitles.hydemod.sam.voice.intro",
+    "sounds": [
+      {
+        "name": "hydemod:sam/intro",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.phase_two": {
+    "subtitle": "subtitles.hydemod.sam.voice.phase_two",
+    "sounds": [
+      {
+        "name": "hydemod:sam/phase_two",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.trash": {
+    "subtitle": "subtitles.hydemod.sam.voice.trash",
+    "sounds": [
+      {
+        "name": "hydemod:sam/trash",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.close_eyes": {
+    "subtitle": "subtitles.hydemod.sam.voice.close_eyes",
+    "sounds": [
+      {
+        "name": "hydemod:sam/close_eyes",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.grovlers": {
+    "subtitle": "subtitles.hydemod.sam.voice.grovlers",
+    "sounds": [
+      {
+        "name": "hydemod:sam/grovlers",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.maglev": {
+    "subtitle": "subtitles.hydemod.sam.voice.maglev",
+    "sounds": [
+      {
+        "name": "hydemod:sam/maglev",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.coffee": {
+    "subtitle": "subtitles.hydemod.sam.voice.coffee",
+    "sounds": [
+      {
+        "name": "hydemod:sam/coffee",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.pat": {
+    "subtitle": "subtitles.hydemod.sam.voice.pat",
+    "sounds": [
+      {
+        "name": "hydemod:sam/pat",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.reset_clock": {
+    "subtitle": "subtitles.hydemod.sam.voice.reset_clock",
+    "sounds": [
+      {
+        "name": "hydemod:sam/reset_clock",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.trash_rain": {
+    "subtitle": "subtitles.hydemod.sam.voice.trash_rain",
+    "sounds": [
+      {
+        "name": "hydemod:sam/trash_rain",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.death": {
+    "subtitle": "subtitles.hydemod.sam.voice.death",
+    "sounds": [
+      {
+        "name": "hydemod:sam/death",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.hurt.1": {
+    "subtitle": "subtitles.hydemod.sam.voice.hurt.1",
+    "sounds": [
+      {
+        "name": "hydemod:sam/hurt_1",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.hurt.2": {
+    "subtitle": "subtitles.hydemod.sam.voice.hurt.2",
+    "sounds": [
+      {
+        "name": "hydemod:sam/hurt_2",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.hurt.3": {
+    "subtitle": "subtitles.hydemod.sam.voice.hurt.3",
+    "sounds": [
+      {
+        "name": "hydemod:sam/hurt_3",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.hurt.4": {
+    "subtitle": "subtitles.hydemod.sam.voice.hurt.4",
+    "sounds": [
+      {
+        "name": "hydemod:sam/hurt_4",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.hurt.5": {
+    "subtitle": "subtitles.hydemod.sam.voice.hurt.5",
+    "sounds": [
+      {
+        "name": "hydemod:sam/hurt_5",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.hurt.6": {
+    "subtitle": "subtitles.hydemod.sam.voice.hurt.6",
+    "sounds": [
+      {
+        "name": "hydemod:sam/hurt_6",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.1": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.1",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_1",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.2": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.2",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_2",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.3": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.3",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_3",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.4": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.4",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_4",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.5": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.5",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_5",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.6": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.6",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_6",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.7": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.7",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_7",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.8": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.8",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_8",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.9": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.9",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_9",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "sam.voice.taunt.10": {
+    "subtitle": "subtitles.hydemod.sam.voice.taunt.10",
+    "sounds": [
+      {
+        "name": "hydemod:sam/taunt_10",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "pipe.enter": {
+    "subtitle": "subtitles.hydemod.pipe.enter",
+    "sounds": [
+      {
+        "name": "hydemod:pipe/enter",
+        "volume": 0.75
+      }
+    ]
+  },
+  "pipe.exit": {
+    "subtitle": "subtitles.hydemod.pipe.exit",
+    "sounds": [
+      {
+        "name": "hydemod:pipe/exit",
+        "volume": 0.75
+      }
+    ]
+  },
+  "pipe.link": {
+    "subtitle": "subtitles.hydemod.pipe.link",
+    "sounds": [
+      {
+        "name": "hydemod:pipe/link",
+        "volume": 0.75
+      }
+    ]
+  },
+  "pipe.fail": {
+    "subtitle": "subtitles.hydemod.pipe.fail",
+    "sounds": [
+      {
+        "name": "hydemod:pipe/fail",
+        "volume": 0.75
+      }
+    ]
+  },
+  "boss.telegraph": {
+    "subtitle": "subtitles.hydemod.boss.telegraph",
+    "sounds": [
+      {
+        "name": "hydemod:boss/telegraph",
+        "volume": 0.75
+      }
+    ]
+  },
+  "boss.stagger": {
+    "subtitle": "subtitles.hydemod.boss.stagger",
+    "sounds": [
+      {
+        "name": "hydemod:boss/stagger",
+        "volume": 0.75
+      }
+    ]
+  },
+  "music.sam_hyde_phase_two": {
+    "subtitle": "subtitles.hydemod.music.sam_hyde_phase_two",
+    "sounds": [
+      {
+        "name": "hydemod:music/sam_hyde_phase_two",
+        "stream": true
+      }
+    ]
+  },
+  "music.elephant_mario_phase_two": {
+    "subtitle": "subtitles.hydemod.music.elephant_mario_phase_two",
+    "sounds": [
+      {
+        "name": "hydemod:music/elephant_mario_phase_two",
+        "stream": true
+      }
+    ]
   }
 }

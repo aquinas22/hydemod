@@ -41,8 +41,8 @@ public final class BossMusic {
                 if (volume <= 0.0F) {
                     stop();
                 }
-            } else if (volume < 0.85F) {
-                volume = Math.min(0.85F, volume + 0.05F);
+            } else if (volume < 0.42F) {
+                volume = Math.min(0.42F, volume + 0.025F);
             }
         }
     }
@@ -68,7 +68,9 @@ public final class BossMusic {
             }
         }
         SoundEvent wanted = boss == null ? null
-                : (boss instanceof ElephantMario ? ModSounds.MUSIC_ELEPHANT_MARIO.get() : ModSounds.MUSIC_SAM_HYDE.get());
+                : (boss instanceof ElephantMario
+                ? (boss.isPhaseTwoClient() ? ModSounds.MUSIC_ELEPHANT_PHASE_TWO.get() : ModSounds.MUSIC_ELEPHANT_MARIO.get())
+                : (boss.isPhaseTwoClient() ? ModSounds.MUSIC_SAM_PHASE_TWO.get() : ModSounds.MUSIC_SAM_HYDE.get()));
         if (current != null && (wanted == null || current.event != wanted)) {
             current.fading = true;
             if (current.isStopped()) {

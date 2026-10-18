@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "id": "hydemod:elephant_fruit"
+    },
+    "title": {
+      "translate": "advancements.hydemod.defeat_elephant.title"
+    },
+    "description": {
+      "translate": "advancements.hydemod.defeat_elephant.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "boss": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "minecraft:entity_type": "hydemod:elephant_mario"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "boss"
+    ]
+  ],
+  "parent": "hydemod:root",
+  "rewards": {
+    "experience": 100
+  }
+}

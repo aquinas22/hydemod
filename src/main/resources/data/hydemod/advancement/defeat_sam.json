@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "id": "hydemod:paradigm_shift_core"
+    },
+    "title": {
+      "translate": "advancements.hydemod.defeat_sam.title"
+    },
+    "description": {
+      "translate": "advancements.hydemod.defeat_sam.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "boss": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "minecraft:entity_type": "hydemod:sam_hyde"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "boss"
+    ]
+  ],
+  "parent": "hydemod:lightsaber",
+  "rewards": {
+    "experience": 100
+  }
+}

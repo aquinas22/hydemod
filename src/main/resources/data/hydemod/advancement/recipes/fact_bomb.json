@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "ingredient": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:glowstone_dust"
+            ]
+          }
+        ]
+      }
+    },
+    "recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hydemod:fact_bomb"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ingredient",
+      "recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hydemod:fact_bomb"
+    ]
+  }
+}

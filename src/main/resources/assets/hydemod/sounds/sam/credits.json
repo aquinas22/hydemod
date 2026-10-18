@@ -1,0 +1,149 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=4jRoatZizQ0",
+  "original_url": "https://www.youtube.com/watch?v=-yFhR1fKWG0",
+  "title": "Sam Hyde's 2070 Paradigm Shift",
+  "author": "Sam Hyde / Million Dollar Extreme",
+  "license_reference": "https://commons.wikimedia.org/wiki/File:Samhydetedtalk2070.png",
+  "source_duration_seconds": 1162.981,
+  "source_sha256": "f232fa7ba51a4151274c49f708692be5557079054fdd97cdb04854f46727d2ed",
+  "changes": "Short excerpts, mono conversion, filtering, loudness normalization and fades.",
+  "clips": {
+    "intro": {
+      "start": 375.3,
+      "end": 378.35,
+      "text": "I'm Sam Hyde. I'm an important thinker."
+    },
+    "phase_two": {
+      "start": 653.7,
+      "end": 656.8,
+      "text": "2070. Future. Now what?"
+    },
+    "trash": {
+      "start": 697.3,
+      "end": 703.2,
+      "text": "Trash economy. You use cubes of trash as money. Everybody becomes rich. It's a gold rush."
+    },
+    "close_eyes": {
+      "start": 602.1,
+      "end": 604.4,
+      "text": "Close your eyes. Everybody in this room, close your eyes."
+    },
+    "grovlers": {
+      "start": 721.45,
+      "end": 725.6,
+      "text": "Depth grovlers will live underground in tiered cities."
+    },
+    "maglev": {
+      "start": 294.05,
+      "end": 297.25,
+      "text": "Use maglev trains to get resources to the Moon."
+    },
+    "coffee": {
+      "start": 645.0,
+      "end": 650.6,
+      "text": "You're drinking Bulletproof Coffee and you don't even realize you're getting all jagged up in the head."
+    },
+    "pat": {
+      "start": 120.15,
+      "end": 122.45,
+      "text": "Guys, pat yourselves on the back right now."
+    },
+    "reset_clock": {
+      "start": 106.1,
+      "end": 109.6,
+      "text": "Can we reset the clock so I have another minute extra?"
+    },
+    "trash_rain": {
+      "start": 684.8,
+      "end": 687.85,
+      "text": "Trash economy. The abundance of trash."
+    },
+    "death": {
+      "start": 953.65,
+      "end": 955.5,
+      "text": "Man, we're so screwed."
+    },
+    "hurt.1": {
+      "start": 782.8,
+      "end": 785.4,
+      "text": "You caught me. I'm unprepared."
+    },
+    "hurt.2": {
+      "start": 376.65,
+      "end": 378.35,
+      "text": "I'm an important thinker."
+    },
+    "hurt.3": {
+      "start": 385.0,
+      "end": 388.2,
+      "text": "I'm a passionate, childlike innovator."
+    },
+    "hurt.4": {
+      "start": 51.3,
+      "end": 55.3,
+      "text": "Is this anybody's? I'm claiming that there, right."
+    },
+    "hurt.5": {
+      "start": 152.95,
+      "end": 155.85,
+      "text": "You did good in school. I didn't do that good."
+    },
+    "hurt.6": {
+      "start": 775.95,
+      "end": 777.45,
+      "text": "Okay. Playing games, huh?"
+    },
+    "taunt.1": {
+      "start": 264.05,
+      "end": 266.75,
+      "text": "What inspires you? What inspires you?"
+    },
+    "taunt.2": {
+      "start": 323.6,
+      "end": 325.95,
+      "text": "Ideas are like currency."
+    },
+    "taunt.3": {
+      "start": 159.45,
+      "end": 163.1,
+      "text": "Look at us. We're the machine that keeps the world going."
+    },
+    "taunt.4": {
+      "start": 586.55,
+      "end": 589.75,
+      "text": "By my calculations, we have five years until the world ends."
+    },
+    "taunt.5": {
+      "start": 678.1,
+      "end": 680.95,
+      "text": "Have you ever had sea cheesy baked potatoes? That'll blow your socks off."
+    },
+    "taunt.6": {
+      "start": 730.65,
+      "end": 733.65,
+      "text": "Video games are going to get more realistic."
+    },
+    "taunt.7": {
+      "start": 737.05,
+      "end": 741.95,
+      "text": "Fuel efficient vehicles getting eighty, a hundred miles per gallon. It's not that crazy."
+    },
+    "taunt.8": {
+      "start": 990.35,
+      "end": 993.4,
+      "text": "I'm going to have your mind uploaded to my, my BlackBerry."
+    },
+    "taunt.9": {
+      "start": 997.05,
+      "end": 999.1,
+      "text": "You'll be cryogenically frozen. I know it."
+    },
+    "taunt.10": {
+      "start": 487.35,
+      "end": 489.4,
+      "text": "There's no more individual anymore. It's just the hive."
+    }
+  },
+  "license": "CC BY 3.0 \u2014 original talk, documented by the linked source record",
+  "license_url": "https://creativecommons.org/licenses/by/3.0/"
+}

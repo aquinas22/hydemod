@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "ingredient": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:compass"
+            ]
+          }
+        ]
+      }
+    },
+    "recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hydemod:satellite_infomometer"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ingredient",
+      "recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hydemod:satellite_infomometer"
+    ]
+  }
+}

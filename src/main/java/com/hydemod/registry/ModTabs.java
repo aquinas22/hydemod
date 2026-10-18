@@ -1,7 +1,6 @@
 package com.hydemod.registry;
 
 import com.hydemod.HydeMod;
-import com.hydemod.item.LightsaberItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -19,12 +18,7 @@ public final class ModTabs {
             .displayItems((params, output) -> {
                 for (var holder : ModItems.ITEMS.getEntries()) {
                     Item item = holder.get();
-                    if (item instanceof LightsaberItem saber) {
-                        output.accept(saber.getDefaultInstance());
-                        output.accept(LightsaberItem.fullyCharged(saber));
-                    } else {
-                        output.accept(item);
-                    }
+                    output.accept(item);
                 }
             })
             .build());

@@ -29,6 +29,7 @@ public class HydeMod {
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModEntities.ENTITIES.register(modBus);
         ModTabs.TABS.register(modBus);
+        com.hydemod.entity.EncounterGameTests.FUNCTIONS.register(modBus);
     }
 
     public static Identifier id(String path) {

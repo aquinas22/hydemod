@@ -27,7 +27,7 @@ def render_song(bpm, bars, bass, lead, arp, drums, lead_wave="square", swing=0.0
     out = raw[:loop_n]
     for i in range(head):  # continuation already contains the previous loop's ringing tails
         k = i / head
-        out[i] = raw[loop_n + i] * (1 - k) + raw[i] * k if i > head // 2 else raw[loop_n + i]
+        out[i] = raw[loop_n + i] * (1 - k) + raw[i] * k
     # DC blocker (one-pole high-pass at ~10 Hz), run twice around the loop so its state is periodic
     r = 0.9986; x1 = y1 = 0.0
     for _ in range(2):
@@ -63,8 +63,8 @@ def _render(bpm, bars, bass, lead, arp, drums, lead_wave):
             x = {"square": square(ph), "pulse": square(ph, 0.25), "saw": saw(ph), "tri": tri(ph)}[wave]
             out[i] += lp(x) * vol * (0.35 + 0.65 * env)
     voice(bass, "saw", 0.32, -12, 3.0, 700)
-    voice(lead, lead_wave, 0.22, 0, 2.0, 3200)
-    voice(arp, "pulse", 0.12, 12, 9.0, 4000)
+    voice(lead, lead_wave, 0.19, 0, 2.0, 2600)
+    voice(arp, "pulse", 0.10, 12, 9.0, 3300)
     # drums
     for s in range(steps):
         t0 = int(s * step * SR)
@@ -92,23 +92,23 @@ def pat(s):
         res.append(None if tok == "." else ("-" if tok == "-" else int(tok)))
     return res
 
-def sam_theme():
+def sam_theme(bpm=132):
     # A-minor synthwave: dramatic "TED talk gone wrong" energy. 8 bars, loops cleanly.
     bass = pat("45 - 45 . 45 - 57 . 45 - 45 . 43 - 55 .  41 - 41 . 41 - 53 . 43 - 43 . 43 - 55 . " * 2)
     lead = pat("69 - - - 72 - 71 - 69 - 67 - 64 - - -  65 - - - 69 - 67 - 64 - 62 - 64 - - - "
                "69 - - - 72 - 76 - 74 - 72 - 71 - - -  72 - 71 - 69 - 67 - 69 - - - - - . . ")
     arp = pat("57 60 64 60 " * 4 + "55 59 62 59 " * 4 + "53 57 60 57 " * 4 + "55 59 62 59 " * 4)
     drums = list("k.h.s.h.k.k.s.hb")
-    return render_song(132, 8, bass, lead, arp, drums, "square")
+    return render_song(bpm, 8, bass, lead, arp, drums, "tri")
 
-def elephant_theme():
+def elephant_theme(bpm=118):
     # Bouncy C-major stomp with a lumbering bass: a big friendly-but-furious elephant.
     bass = pat("36 . 43 . 36 . 43 . 41 . 48 . 41 . 48 .  43 . 50 . 43 . 50 . 36 . 43 . 36 - 38 40 " * 2)
     lead = pat("72 . 76 . 79 - 76 . 77 . 81 . 79 - - .  79 . 77 . 76 . 74 . 72 - 74 - 76 - - . "
                "72 . 76 . 79 - 84 . 83 . 81 . 79 - - .  77 . 76 . 74 . 71 . 72 - - - - - . . ")
     arp = pat("60 64 67 64 " * 4 + "65 69 72 69 " * 4 + "67 71 74 71 " * 4 + "60 64 67 64 " * 4)
     drums = list("k...s...k.k.s..s")
-    return render_song(118, 8, bass, lead, arp, drums, "tri")
+    return render_song(bpm, 8, bass, lead, arp, drums, "tri")
 
 def trumpet():
     """Elephant trumpet: brassy rising-then-falling blare with growl."""
@@ -178,4 +178,6 @@ if __name__ == "__main__":
     os.makedirs(gen_sounds.OUT, exist_ok=True)
     write_ogg("sam_hyde_theme", sam_theme())
     write_ogg("elephant_mario_theme", elephant_theme())
+    write_ogg("sam_hyde_phase_two", sam_theme(152))
+    write_ogg("elephant_mario_phase_two", elephant_theme(136))
     print("boss audio written")

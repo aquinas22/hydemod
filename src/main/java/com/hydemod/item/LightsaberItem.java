@@ -8,9 +8,7 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -29,15 +27,12 @@ import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A lightsaber powered by Redstone Flux (FE). Right-click toggles the blade. A lit blade
- * drains a trickle of FE while held and a chunk per hit; unlit or flat, it is a 1-damage club.
- * Charge it in a Charging Station (redstone or any FE source) or any other mod's FE charger.
+ * A permanently charged lightsaber. Right-click toggles the blade; holstering retracts it.
+ * The legacy energy component is retained so existing stacks and charging stations still work.
  */
 public class LightsaberItem extends Item {
     public static final int CAPACITY = 200_000;
     public static final int MAX_TRANSFER = 5_000;
-    public static final int ENERGY_PER_HIT = 400;
-    public static final int ENERGY_PER_TICK = 2;
 
     private final KyberColor color;
 
@@ -51,7 +46,7 @@ public class LightsaberItem extends Item {
                 .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, color.attackDamage() - 1.0F, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -2.0F, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .build();
-        p = p.stacksTo(1).attributes(attributes).component(ModComponents.ENERGY.get(), 0);
+        p = p.stacksTo(1).attributes(attributes).component(ModComponents.ENERGY.get(), CAPACITY);
         if (color == KyberColor.RED || color == KyberColor.PURPLE) {
             p = p.fireResistant();
         }
@@ -69,20 +64,22 @@ public class LightsaberItem extends Item {
     }
 
     public static int getEnergy(ItemStack stack) {
-        return stack.getOrDefault(ModComponents.ENERGY.get(), 0);
+        return CAPACITY;
     }
 
     public static void setEnergy(ItemStack stack, int energy) {
-        stack.set(ModComponents.ENERGY.get(), Mth.clamp(energy, 0, CAPACITY));
+        if (stack.getOrDefault(ModComponents.ENERGY.get(), 0) != CAPACITY) {
+            stack.set(ModComponents.ENERGY.get(), CAPACITY);
+        }
     }
 
     public static boolean isIgnited(ItemStack stack) {
         return stack.has(ModComponents.IGNITED.get());
     }
 
-    /** True when the blade is lit and has power: full damage applies. */
+    /** True when the blade is lit: full damage applies. */
     public static boolean isActive(ItemStack stack) {
-        return stack.getItem() instanceof LightsaberItem && isIgnited(stack) && getEnergy(stack) >= ENERGY_PER_HIT;
+        return stack.getItem() instanceof LightsaberItem && isIgnited(stack);
     }
 
     /** Current blade extension 0-4 (0 = no blade, 4 = fully lit). */
@@ -115,11 +112,7 @@ public class LightsaberItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide()) {
             boolean turnOn = !isIgnited(stack);
-            if (turnOn && getEnergy(stack) < ENERGY_PER_HIT) {
-                player.sendOverlayMessage(Component.translatable("message.hydemod.lightsaber.no_power").withStyle(ChatFormatting.RED));
-                level.playSound(null, player.blockPosition(), SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.7F, 1.4F);
-                return InteractionResult.FAIL;
-            }
+            setEnergy(stack, CAPACITY);
             setIgnited(stack, turnOn);
             level.playSound(null, player.getX(), player.getY() + 1, player.getZ(),
                     turnOn ? ModSounds.SABER_IGNITE.get() : ModSounds.SABER_RETRACT.get(), SoundSource.PLAYERS, 1.0F, 0.95F + level.getRandom().nextFloat() * 0.1F);
@@ -129,6 +122,7 @@ public class LightsaberItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot) {
+        setEnergy(stack, CAPACITY); // migrate depleted stacks from earlier versions
         boolean ignited = isIgnited(stack);
         int blade = bladeLength(stack);
         // Animate the blade sliding out of / back into the hilt.
@@ -146,19 +140,6 @@ public class LightsaberItem extends Item {
             setBlade(stack, 0);
             return;
         }
-        // Drain once a second (not every tick) so the stack isn't resynced to the client 20x/second.
-        if (level.getGameTime() % 20 != 0) {
-            return;
-        }
-        int energy = getEnergy(stack) - ENERGY_PER_TICK * 20;
-        if (energy < ENERGY_PER_HIT) {
-            setIgnited(stack, false);
-            level.playSound(null, owner.blockPosition(), ModSounds.SABER_RETRACT.get(), SoundSource.PLAYERS, 1.0F, 0.7F);
-            if (owner instanceof Player player) {
-                player.sendOverlayMessage(Component.translatable("message.hydemod.lightsaber.depleted").withStyle(ChatFormatting.RED));
-            }
-        }
-        setEnergy(stack, energy);
     }
 
     @Override
@@ -173,7 +154,7 @@ public class LightsaberItem extends Item {
     @Override
     public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (isActive(stack)) {
-            setEnergy(stack, getEnergy(stack) - ENERGY_PER_HIT);
+            setEnergy(stack, CAPACITY);
             target.igniteForSeconds(color == KyberColor.RED || color == KyberColor.PURPLE ? 4 : 2);
             if (target.level() instanceof ServerLevel level) {
                 level.playSound(null, target.getX(), target.getY(0.5), target.getZ(), ModSounds.SABER_HIT.get(), SoundSource.PLAYERS,
@@ -209,13 +190,14 @@ public class LightsaberItem extends Item {
 
     @Override
     public int getBarColor(ItemStack stack) {
-        return 0xFF2020; // redstone red
+        return color.rgb();
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
         builder.accept(Component.translatable("tooltip.hydemod.lightsaber.energy", String.format("%,d", getEnergy(stack)), String.format("%,d", CAPACITY))
-                .withStyle(ChatFormatting.RED));
+                .withStyle(ChatFormatting.AQUA));
+        builder.accept(Component.translatable("tooltip.hydemod.lightsaber.infinite").withStyle(ChatFormatting.GOLD));
         builder.accept(Component.translatable(isIgnited(stack) ? "tooltip.hydemod.lightsaber.on" : "tooltip.hydemod.lightsaber.off")
                 .withStyle(ChatFormatting.GRAY));
         builder.accept(Component.translatable("tooltip.hydemod.lightsaber.crystal." + color.getSerializedName()).withColor(color.rgb()));

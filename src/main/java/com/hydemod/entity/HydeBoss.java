@@ -133,6 +133,28 @@ public abstract class HydeBoss extends Monster {
         level().playSound(null, getX(), getY(), getZ(), sound, SoundSource.HOSTILE, volume, pitch);
     }
 
+    /** Short, translated dodge instructions stay visible without filling the chat log. */
+    protected void warnPlayers(ServerLevel level, String key) {
+        forNearbyPlayers(level, p -> {
+            if (isFightable(p)) {
+                p.sendOverlayMessage(Component.translatable(key).withStyle(ChatFormatting.GOLD));
+            }
+        });
+    }
+
+    protected boolean isPerformingMove() {
+        return getIntroTicksLeft() > 0;
+    }
+
+    protected void warningRing(ServerLevel level, double x, double y, double z, double radius,
+                               net.minecraft.core.particles.SimpleParticleType particle) {
+        for (int i = 0; i < 24; i++) {
+            double angle = Math.PI * 2 * i / 24;
+            level.sendParticles(particle, x + Math.cos(angle) * radius, y + 0.12,
+                    z + Math.sin(angle) * radius, 1, 0.02, 0.02, 0.02, 0.0);
+        }
+    }
+
     // ------------------------------------------------------------------ hooks for subclasses
 
     /** Called once when the boss first ticks: titles, sounds and a dramatic entrance. */

@@ -41,6 +41,7 @@ public final class BossCallOverlay {
             cooldown = REPEAT_TICKS;
         }
         wasFighting = fighting;
+        if (!fighting) showTicks = 0;
         if (showTicks > 0) {
             int t = SHOW_TICKS - showTicks;
             if (t < 60 && t % 15 == 0) { // ring-ring

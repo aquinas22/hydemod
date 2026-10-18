@@ -654,4 +654,6 @@ shaped("flip_charm", [" A ", "AEA", " A "], {"A": "minecraft:amethyst_shard", "E
 shaped("moment_stopwatch", [" G ", "GCG", " G "], {"G": "minecraft:gold_ingot", "C": "minecraft:clock"}, f"{M}:moment_stopwatch")
 shaped("chrono_pendant", [" S ", "SDS", " T "], {"S": "minecraft:string", "D": "minecraft:diamond", "T": "minecraft:totem_of_undying"}, f"{M}:chrono_pendant")
 
+import gen_polish_data
+gen_polish_data.main()
 print("data written")
